@@ -4,8 +4,7 @@ import type { RedditMediaState } from "./lib/redditMediaState";
 import { getRedditMediaState } from "./lib/redditMediaState";
 
 import { IFrameImage, IFrameTweet, ImageWrapper } from './ImageWrapper';
-// VideoHandler is large (uses mux.js) reduce initial bundle size by lazy loading
-const VideoHandler = React.lazy(() => import('./VideoHandler'));
+import VideoHandler from "components/MediaElement/VideoHandler";
 
 const Media = ({
     post,
