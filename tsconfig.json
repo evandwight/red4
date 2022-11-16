@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": false,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": ".",
+    "noImplicitAny": false,
+    "sourceMap": true,
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/api/auth/[...nextauth].js", "prisma/seed.js", "scripts/reddit/*.js", "scripts/reddit/refreshMaterializedView.ts"],
+  "exclude": ["node_modules"]
+}

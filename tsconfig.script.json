@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+      "target": "ES2022",
+      "lib": ["dom", "dom.iterable"],
+      "allowJs": true,
+      "skipLibCheck": true,
+      "strict": true,
+      "forceConsistentCasingInFileNames": true,
+      "noEmit": false,
+      "esModuleInterop": true,
+      "module": "CommonJS",
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "isolatedModules": false,
+      "baseUrl": ".",
+      "jsx": "preserve",
+      "noImplicitAny": false,
+      "outDir": "build-scripts"
+    },
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/api/auth/[...nextauth].js", "prisma/seed.js"],
+    "exclude": ["node_modules"]
+  }
+  

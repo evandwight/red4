@@ -1,0 +1,99 @@
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["orderByNulls"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model post {
+    id                   String    @id @db.Uuid
+    title                String
+    created              DateTime  @default(now())
+    reddit_id            String?   @unique
+    score                Int       @default(0)
+    reddit_score         Int       @default(0)
+    upvote_ratio         Float     @default(1)
+    reddit_link          String?
+    external_link        String?
+    external_preview     String?
+    reddit_comment_count Int       @default(0)
+    thumbnail            String?
+    text                 String?
+    user_name            String?
+    is_local             Boolean   @default(false)
+    comment_update_time  DateTime?
+    subreddit            String?
+
+    @@index([created(sort: Desc)])
+    @@index([subreddit, created(sort: Desc)])
+}
+
+model vote {
+    user_id   String        @db.Uuid
+    thing_id  String        @db.Uuid
+    direction VoteDirection @default(NONE)
+
+    @@unique([user_id, thing_id], map: "vote_user_thing_unique_constraint")
+}
+
+enum VoteDirection {
+    UP
+    DOWN
+    NONE
+}
+
+model comment {
+    id               String   @id @db.Uuid
+    post_id          String   @db.Uuid
+    parent_id        String?  @db.Uuid
+    text             String
+    created          DateTime @default(now())
+    reddit_id        String?  @unique
+    parent_reddit_id String?
+    score            Int      @default(0)
+    reddit_score     Int      @default(0)
+    reddit_link      String?
+    user_name        String?
+    is_local         Boolean  @default(false)
+}
+
+model profile {
+    id         String  @id @db.Uuid
+    is_admin   Boolean @default(false)
+    is_invited Boolean @default(false)
+    user_name  String  @unique
+    has_tags   Boolean @default(false)
+    tag_filter Json
+}
+
+model invite {
+    from_id String? @db.Uuid
+    to_id   String  @id @db.Uuid
+}
+
+model invitation {
+    from_id  String   @db.Uuid
+    code     String   @id
+    to_email String
+    created  DateTime @default(now())
+}
+
+model define_tag {
+    tag_id  String @id @db.VarChar(64)
+    user_id String @db.Uuid
+
+    @@index([user_id])
+}
+
+model tag {
+    tag_id   String  @db.VarChar(64)
+    thing_id String  @db.Uuid
+    value    Boolean @default(false)
+
+    @@unique([tag_id, thing_id], map: "tag_thing_unique_constraint")
+    @@index([tag_id])
+    @@index([thing_id])
+}

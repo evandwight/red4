@@ -1,0 +1,7 @@
+export default function FormShortTextField({ id, label, passThroughProps }:
+    {id: string, label:string, passThroughProps?: any}) {
+    return <tr>
+        <th><label htmlFor={id}>{label}:</label></th>
+        <td><input className="w-64 text-black" type="text" name={id} id={id} {... passThroughProps}/></td>
+    </tr>
+}
