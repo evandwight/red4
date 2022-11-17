@@ -15,7 +15,7 @@ export type RedditMediaState = {
 }
 export async function getRedditMediaState(post, containerSize): Promise<RedditMediaState> {
     const DOMAIN = window?.location?.hostname ?? "menosmalo.com";
-    let mediaState: RedditMediaState = {isLoaded: true,};
+    let mediaState: RedditMediaState = { isLoaded: true, };
     if (!post?.["mediaInfo"]) {
         console.log('findMediaInfo')
         let m = await findMediaInfo(post, false, DOMAIN);
@@ -58,16 +58,13 @@ function findImage({ post, containerSize }) {
         let num = post.mediaInfo.imageInfo.length - 1;
 
         //choose smallest image possible
-        let done = false;
-        let width = containerSize.width;
-        post.mediaInfo.imageInfo.forEach((res, i) => {
-            if (!done) {
-                if (res.width > width) {
-                    num = i;
-                    done = true;
-                }
+        let { width, height } = containerSize;
+        for (const [res, i] of post.mediaInfo.imageInfo.entries()) {
+            if (res.width > width && res.height > height) {
+                num = i;
+                break;
             }
-        });
+        };
         let imgheight = post.mediaInfo.imageInfo[num].height;
         let imgwidth = post.mediaInfo.imageInfo[num].width;
         isImage = true;
@@ -81,52 +78,10 @@ function findImage({ post, containerSize }) {
     return { isTweet, isIFrame, isGallery, isImage, galleryInfo, imageInfo };
 };
 
-function findAudio(url) {
-    let regex = /([A-Z])\w+/g;
-    let a: string = url;
-    a = a.replace(regex, "DASH_audio");
-    return { videoAudio: a };
-};
-
 const findVideo = ({ post, containerSize }) => {
-    let isMP4 = false, isImage = false;
-    let videoInfo;
-    let imageData = {}, videoAudioData = {};
-
-    let optimize = "720";
-    let url = "";
-
-    if (containerSize.height < 480) {
-        optimize = "360";
-    } else if (containerSize.height < 720) {
-        optimize = "480";
-    }
-
-    if (post?.mediaInfo?.videoInfo) {
-        url = post.mediaInfo.videoInfo.url;
-        if (url.includes("DASH_1080")) {
-            url = url.replace("DASH_1080", `DASH_${optimize}`);
-        }
-        if (url.includes("DASH_720")) {
-            url = url.replace("DASH_720", `DASH_${optimize}`);
-        }
-
-        if (url.includes("v.redd.it")) {
-            videoAudioData = findAudio(post.mediaInfo.videoInfo.url);
-        }
-
-        videoInfo = {
-            url: url,
-            height: post.mediaInfo.videoInfo.height,
-            width: post.mediaInfo.videoInfo.width,
-            hasAudio: post.mediaInfo.videoInfo?.hasAudio,
-        }
-        imageData = findImage({ post, containerSize });
-
-        isImage = false;
-        isMP4 = true;
-    }
-    return { ...imageData, ...videoAudioData, videoInfo, isMP4, isImage };
+    let isMP4 = true, isImage = false;
+    let imageData = findImage({ post, containerSize });
+    return { ...imageData, videoInfo: post?.mediaInfo?.videoInfo, isMP4, isImage };
 };
 
 const findIframe = ({ post }) => {

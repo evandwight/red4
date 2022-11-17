@@ -52,7 +52,7 @@ const Media = ({
     } else if (isIFrame && !isTweet) {
         child = <IFrameImage iFrame={iFrame} />
     } else if (isMP4 && !isIFrame) {
-        child = <VideoHandler videoInfo={videoInfo} audio={videoAudio} onLoadingComplete={onLoaded} />
+        child = <VideoHandler {...{videoInfo, containerSize}} onLoadingComplete={onLoaded} />
     } else {
         console.log({post})
         child = <a title="external link" href={post.external_link}>
