@@ -1,1 +1,1 @@
-~/.venvs/red4/bin/python $1/scripts/reddit/python/$2
+~/.venvs/red4/bin/python $1/scripts/reddit/python/$2 > ~/logs/$2.log 2>&1
