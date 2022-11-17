@@ -1,5 +1,5 @@
-import prisma from "../../lib/prisma";
-import { updateComments } from "../../lib/pythonScript";
+import prisma from "lib/prisma";
+import { updateComments } from "lib/pythonScript";
 import { hoursAgo } from "./util";
 
 async function main() {

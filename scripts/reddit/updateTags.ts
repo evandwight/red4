@@ -1,4 +1,4 @@
-import prisma from "../../lib/prisma";
+import prisma from "lib/prisma";
 import { hoursAgo } from "./util";
 
 function isRageBait(post) {

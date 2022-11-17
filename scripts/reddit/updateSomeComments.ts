@@ -1,14 +1,14 @@
-import prisma, { prismaView } from "../../lib/prisma";
-import { updateComments } from "../../lib/pythonScript";
+import { API_POSTS } from "lib/api/paths";
+import prisma from "lib/prisma";
+import { updateComments } from "lib/pythonScript";
 import { hoursAgo } from "./util";
 
 async function main() {
-    const hotPosts = (await prismaView.post_with_score.findMany({
-        where: { created: { gt: hoursAgo(12), lt: hoursAgo(4) } },
-        orderBy: { hot: 'desc' },
-        take: 100,
-        select: { id: true }
-    })).map(e => e?.id);
+    const hotPosts = await Promise.all([
+        API_POSTS.postPlus({sort: "hot", page:"1", sub: "all"}, undefined),
+        API_POSTS.postPlus({sort: "hot", page:"2", sub: "all"}, undefined),
+        API_POSTS.postPlus({sort: "hot", page:"3", sub: "all"}, undefined)]).then(([a, b, c]) => 
+            [...a.data.posts, ...b.data.posts, ...c.data.posts].map(post => post.id));
     console.log({hotPosts});
     const posts = await prisma.post.findMany({
         where: {

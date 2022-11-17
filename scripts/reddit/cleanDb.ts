@@ -1,4 +1,4 @@
-import prisma from "../../lib/prisma";
+import prisma from "lib/prisma";
 import { alwaysKeepSubs } from "./util";
 
 async function cleanPosts() {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import axios from "axios";
 
 export type getZodType<T> = T extends Zod.Schema<infer U> ? U : any;
 
@@ -25,15 +26,20 @@ export class ApiUrl<QueryType, BodyType, ReturnType> {
         this.bodySchema = bodySchema;
     }
     post(query: QueryType, body: BodyType): Promise<{ data: ReturnType }> {
-        return fetch(this.fullPath(query as QueryType), {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-          }).then(response => response.json())
-          .then(json => ({data: json}));
+        // TODO upgrade to node18 for fetch api
+        return axios.post(this.fullPath(query), body);
+        // return fetch(this.fullPath(query as QueryType), {
+        //     method: 'POST',
+        //     headers: {
+        //       'Accept': 'application/json',
+        //       'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(body)
+        //   }).then(response => response.json())
+        //   .then(json => ({data: json}));
+    }
+    postPlus(query: QueryType, body: BodyType): Promise<{ data: ReturnType }> {
+        return axios.post(process.env.NEXT_PUBLIC_BASE_URL + this.fullPath(query), body);
     }
     queryString(query: QueryType) {
         return !query ? "" : "?" + Object.getOwnPropertyNames(query)
@@ -51,7 +57,7 @@ export class ApiUrlNoArg<ReturnType> extends ApiUrl<undefined, undefined, Return
         super(path, z.undefined(), z.undefined());
     }
     post(): Promise<{ data: ReturnType }> {
-        return super.post(undefined,undefined);
+        return super.post(undefined, undefined);
     }
 }
 
@@ -64,14 +70,14 @@ export class ApiUrlNoBody<QueryType, ReturnType> extends ApiUrl<QueryType, undef
     }
 }
 
-export type FormErrorType = {errors: string[]};
+export type FormErrorType = { errors: string[] };
 export type FormUrl<Q, B, ErrorType, SuccessType> = ApiUrl<Q, B, (ErrorType & FormErrorType) | SuccessType>;
 
 export function createFormUrl<ZQ extends Zod.Schema, ZB extends Zod.Schema>(path, querySchema: ZQ, bodySchema: ZB)
-    :<E,S>() => FormUrl<getZodType<ZQ>, getZodType<ZB>, E, S>{
+    : <E, S>() => FormUrl<getZodType<ZQ>, getZodType<ZB>, E, S> {
     type Q = getZodType<ZQ>;
-    type B = getZodType<ZB>;    
-    return <E,S>(): FormUrl<Q,B,E,S> => {
+    type B = getZodType<ZB>;
+    return <E, S>(): FormUrl<Q, B, E, S> => {
         return new ApiUrl<Q, B, (E & FormErrorType) | S>(path, querySchema, bodySchema);
     }
 }

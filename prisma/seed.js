@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 async function main() {
     const adminId = process.env.ADMIN_USER_ID;
     assert(adminId);
-    await prisma.profile.create({ data: { user_name: "evan", id: adminId, is_admin: true, is_invited: true, tag_filter: {} } })
+    await prisma.profile.create({ data: { user_name: "evan", id: adminId, is_admin: true, is_invited: true, has_tags:true, tag_filter: {} } })
     await prisma.invite.create({data: {to_id: adminId}});
     await prisma.define_tag.create({ data: { tag_id: "nsfw", user_id: adminId } });
     await prisma.define_tag.create({ data: { tag_id: "removed_from_reddit", user_id: adminId } });
