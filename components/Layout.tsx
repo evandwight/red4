@@ -1,11 +1,11 @@
-import NextIconLink from "components/NextIconLink";
+import NextIconLink2 from "components/NextIconLink2";
 import { PROFILE } from "lib/paths";
-import { useSession, signIn, signOut } from "next-auth/react"
+import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from 'next/link';
 import LoginCircle from 'svg/login-circle-line.svg';
 import LogoutCircle from 'svg/logout-circle-line.svg';
-import ProfileIcon from 'svg/user-settings-line.svg'
+import ProfileIcon from 'svg/user-settings-line.svg';
 
 export default function Layout({ children, extraButtons }: { children: any, extraButtons?: any }) {
     const { data: session, status } = useSession()
@@ -26,7 +26,9 @@ export default function Layout({ children, extraButtons }: { children: any, extr
                     {extraButtons}
                     <div className="pl-2">
                         {status === "authenticated"
-                            ? <NextIconLink href={PROFILE} imageObj={ProfileIcon} title="profile"/>
+                            ? <NextIconLink2 href={PROFILE} title="profile">
+                                <ProfileIcon className="w-6 fill-green-500" />
+                                </NextIconLink2>
                             : status === "loading"
                                 ? <button title="profile" disabled>
                                     <ProfileIcon className="w-6 fill-stone-500" />
