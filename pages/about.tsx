@@ -14,7 +14,8 @@ export default function About() {
             <ul className="list-disc list-inside">
                 <li>a tagging system to categorize and filter submissions</li>
                 <li>a user <TextLink href={INVITE_TREE}>invitation tree</TextLink> to combat spam</li>
-                <li>a strong commitment to transparency,</li>
+                <li>a strong commitment to transparency</li>
+                <li><TextLink href="https://github.com/evandwight/red4">open</TextLink> algorithms</li>
             </ul>
         </div>
         <h2>Questions or comments?</h2>
