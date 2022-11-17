@@ -16,6 +16,8 @@ export async function loadRedditPost(redditId) {
     const std = await runPython('loadRedditPost.py', [redditId]);
     const json = JSON.parse(std.stdout);
     const id =  json.id as string;
+    await redis.del(API_COMMENTS.fullPath({id}));
+    await redis.del(API_POST.fullPath({id}));
     return id;
 }
 
