@@ -1,5 +1,5 @@
 import prisma from "lib/prisma";
-import { hoursAgo } from "./util";
+import { hoursAgo, runOneTask } from "./util";
 
 function isRageBait(post) {
     return post.reddit_comment_count > (post.reddit_score * post.upvote_ratio)
@@ -25,5 +25,5 @@ async function main() {
 }
 
 if (require.main === module) {
-    main();
+    runOneTask('updateTags', main);
 }

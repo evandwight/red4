@@ -1,6 +1,6 @@
 import prisma from "lib/prisma";
 import { updateComments } from "lib/pythonScript";
-import { hoursAgo } from "./util";
+import { hoursAgo, runOneTask } from "./util";
 
 async function main() {
     const posts = (await prisma.post.findMany({
@@ -13,5 +13,5 @@ async function main() {
 }
 
 if (require.main === module) {
-    main();
+    runOneTask('updateAlwaysKeepComments', main);
 }

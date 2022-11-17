@@ -1,7 +1,7 @@
 import { API_POSTS } from "lib/api/paths";
 import prisma from "lib/prisma";
 import { updateComments } from "lib/pythonScript";
-import { hoursAgo } from "./util";
+import { hoursAgo, runOneTask } from "./util";
 
 async function main() {
     const hotPosts = await Promise.all([
@@ -24,5 +24,5 @@ async function main() {
 }
 
 if (require.main === module) {
-    main();
+    runOneTask('updateSomeComments', main);
 }
