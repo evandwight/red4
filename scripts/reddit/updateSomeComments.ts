@@ -9,7 +9,6 @@ async function main() {
         API_POSTS.postPlus({sort: "hot", page:"2", sub: "all"}, undefined),
         API_POSTS.postPlus({sort: "hot", page:"3", sub: "all"}, undefined)]).then(([a, b, c]) => 
             [...a.data.posts, ...b.data.posts, ...c.data.posts].map(post => post.id));
-    console.log({hotPosts});
     const posts = await prisma.post.findMany({
         where: {
             AND: [
@@ -19,7 +18,6 @@ async function main() {
         },
         orderBy: { comment_update_time: { sort: 'asc', nulls: 'last' } }
     });
-    console.log({posts});
     if (posts.length) {
         await updateComments(posts[0].id);
     }
