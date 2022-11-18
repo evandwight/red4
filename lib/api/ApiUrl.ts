@@ -1,5 +1,4 @@
 import { z } from "zod";
-import axios from "axios";
 import { toQueryStr } from "lib/utils";
 
 export type getZodType<T> = T extends Zod.Schema<infer U> ? U : any;
@@ -27,20 +26,15 @@ export class ApiUrl<QueryType, BodyType, ReturnType> {
         this.bodySchema = bodySchema;
     }
     post(query: QueryType, body: BodyType): Promise<{ data: ReturnType }> {
-        // TODO upgrade to node18 for fetch api
-        return axios.post(this.fullPath(query), body);
-        // return fetch(this.fullPath(query as QueryType), {
-        //     method: 'POST',
-        //     headers: {
-        //       'Accept': 'application/json',
-        //       'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(body)
-        //   }).then(response => response.json())
-        //   .then(json => ({data: json}));
-    }
-    postPlus(query: QueryType, body: BodyType): Promise<{ data: ReturnType }> {
-        return axios.post(process.env.NEXT_PUBLIC_BASE_URL + this.fullPath(query), body);
+        return fetch(this.fullPath(query as QueryType), {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+          }).then(response => response.json())
+          .then(json => ({data: json}));
     }
     queryString(query: QueryType) {
         return !query ? "" : "?" + toQueryStr(query);

@@ -33,8 +33,6 @@ export function PostSmall({ post, initialVotes, profile }) {
     </div>
 }
 
-
-
 export function Thumbnail({ post }) {
     return <div className="px-2 grow basis-0 flex justify-center ">
         <div className="flex items-center w-[70px] h-[70px] bg-stone-500">
