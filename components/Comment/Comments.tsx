@@ -53,7 +53,7 @@ export function Comment({ node, profile, post, initialVotes, initialCollapse }: 
                 : expand ? <div className="bg-stone-500 text-center my-2">{reason}</div> : <></>}
             <hr className="border-stone-500" />
         </CommentDepth>
-        {show && <div>
+        {show && expand && <div>
             <Comments {... { post, nodes: node.children, initialCollapse, parentId: node.id, profile, initialVotes}} />
         </div>}
     </div>
