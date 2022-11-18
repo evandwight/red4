@@ -1,4 +1,6 @@
+import { toQueryStr } from "lib/utils";
 
+export const POSTS = (props: {sub: string, page: string, sort: string}) => `/posts?${toQueryStr(props)}`;
 export const POST_DETAIL = (id: string) => `/post?id=${id}`;
 export const ACCESS_DENIED = `/accessDenied`;
 export const ABOUT = '/about';

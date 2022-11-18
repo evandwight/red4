@@ -1,9 +1,9 @@
-import { forwardRef, Fragment } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import SortIcon from 'svg/sort-desc.svg';
-import { useRouter } from 'next/router';
-import { API_POSTS } from "lib/api/paths";
+import { Menu, Transition } from '@headlessui/react';
+import { POSTS } from 'lib/paths';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { forwardRef, Fragment } from 'react';
+import SortIcon from 'svg/sort-desc.svg';
 
 const MyLink = forwardRef((props: any, ref) => {
     const { href, children, ...rest } = props;
@@ -24,7 +24,11 @@ function classNames(...classes) {
 
 export default function ChangeSortButton() {
     const router = useRouter();
-    const { page, sort = "hot", sub } = router.query;
+    const { sort = "hot", sub = "all" } = router.query;
+
+    if (sub instanceof Array) {
+        throw Error("unexpected type");
+    }
 
     return (
         <Menu as="div" className="relative inline-block text-left">
@@ -51,7 +55,7 @@ export default function ChangeSortButton() {
                     <div className="py-1">
                         <Menu.Item>
                             {({ active }) => (
-                                <MyLink href={API_POSTS.queryString({ ...router.query, sort: "new", page: "1" })}
+                                <MyLink href={POSTS({ sub , sort: "new", page: "1" })}
                                     className={classNames(
                                         active ? 'bg-stone-100 text-stone-900' : 'text-stone-700',
                                         'block px-4 py-2 text-sm',
@@ -62,7 +66,7 @@ export default function ChangeSortButton() {
                         </Menu.Item>
                         <Menu.Item>
                             {({ active }) => (
-                                <MyLink href={API_POSTS.queryString({ ...router.query, sort: "hot", page: "1" })}
+                                <MyLink href={POSTS({ sub , sort: "hot", page: "1" })}
                                     className={classNames(
                                         active ? 'bg-stone-100 text-stone-900' : 'text-stone-700',
                                         'block px-4 py-2 text-sm',

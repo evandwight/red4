@@ -6,12 +6,11 @@ import { API_GET_PROFILE, API_GET_VOTES, API_POSTS } from "lib/api/paths";
 import { InitialVotesType, PostType } from "lib/commonTypes";
 import { ABOUT, SEARCH_POST, SUBMIT_POST } from "lib/paths";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import AddSymbol from 'svg/add-line.svg';
-import SearchSymbol from 'svg/search.svg';
 import QuestionSymbol from 'svg/question-line.svg';
+import SearchSymbol from 'svg/search.svg';
 
 const PostListing = () => {
     const router = useRouter();
@@ -54,7 +53,12 @@ const PostListing = () => {
             next: posts.length > 0 ? API_POSTS.queryString({ page: (page + 1).toString(), sub, sort }) : undefined,
             prev: page > 1 ? API_POSTS.queryString({ page: (page - 1).toString(), sub, sort }) : undefined,
         }
-        return <Posts {... { posts, initialVotes, profile, pageLinks, page }} />
+        return <div>
+            <div className="text-stone-500">
+                {`${sort} ${sub} - ${page}`}
+            </div>
+            <Posts {... { posts, initialVotes, profile, pageLinks, page }} />
+        </div>
     }
 }
 

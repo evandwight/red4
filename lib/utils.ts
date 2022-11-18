@@ -60,3 +60,7 @@ export function notAuthorizedToSignIn(error) {
         signIn('cognito');
     }
 }
+
+export function toQueryStr(query: Object) {
+    return Object.entries(query).map(([key, val]) => `${key}=${val}`).join("&");
+}
