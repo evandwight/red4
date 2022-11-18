@@ -16,6 +16,7 @@ export default function About() {
                 <li>a user <TextLink href={INVITE_TREE}>invitation tree</TextLink> to combat spam</li>
                 <li>a strong commitment to transparency</li>
                 <li>open algorithms - <TextLink href={GITHUB}>github</TextLink></li>
+                <li>restoring locked and removed reddit submissions - continue the conversation</li>
             </ul>
         </div>
         <h2 id="tagging">Tagging</h2>
