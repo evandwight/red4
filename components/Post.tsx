@@ -38,7 +38,7 @@ export function Thumbnail({ post }) {
         <div className="flex items-center w-[70px] h-[70px] bg-stone-500">
             {isValidHttpUrl(post.thumbnail)
                 ? <a href={post.external_link}><img loading="lazy" src={post.thumbnail} alt="" /></a>
-                : <QuestionIcon className="fill-stone-300 bg-stone-500" alt="" />
+                : <QuestionIcon className="w-[70px] h-[70px] fill-stone-300" alt="" />
             }
         </div>
     </div>
