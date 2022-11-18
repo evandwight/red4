@@ -61,7 +61,7 @@ export const API_FORM_SUBMIT_POST = createApiUrl(
         overrideMeanTag: z.boolean().optional(),
         submitAnyways: z.boolean().optional(),
     }))
-    <(FormErrorType & {enableOverrideMean?: boolean }) | { id: string }>();
+    <(FormErrorType & {enableOverrideMean?: boolean, enableSubmitAnyways?: boolean }) | { id: string }>();
 
 export const API_FORM_SEARCH_POST = createApiUrl(
     '/api/forms/post/search',
@@ -80,7 +80,7 @@ export const API_FORM_SUBMIT_COMMENT = createApiUrl(
         overrideMeanTag: z.boolean().optional(),
         submitAnyways: z.boolean().optional(),
     }))
-    <(FormErrorType & {enableOverrideMean?: boolean }) | { id: string }>();
+    <(FormErrorType & {enableOverrideMean?: boolean, enableSubmitAnyways?: boolean }) | { id: string }>();
 
 export const API_FORM_PROFILE = createApiUrl(
     '/api/forms/profile',

@@ -1,9 +1,7 @@
 import { fancyApi } from 'lib/api/fancyApi';
-import { API_FORM_INVITE_SEND, API_FORM_TAG_CREATE } from "lib/api/paths";
+import { API_FORM_TAG_CREATE } from "lib/api/paths";
 import { isUniqueConstraintError } from 'lib/api/utils';
 import prisma from 'lib/prisma';
-import { ApiError } from 'next/dist/server/api-utils';
-import { v4 as uuidv4 } from 'uuid';
 
 const handler = fancyApi(API_FORM_TAG_CREATE, { isInvited: true }, async (req, res, props) => {
     const { invitedProfile } = props;

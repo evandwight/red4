@@ -1,4 +1,3 @@
-import { PrismaPromise } from '@prisma/client';
 import { fancyApi } from 'lib/api/fancyApi';
 import { API_FORM_SUBMIT_COMMENT } from "lib/api/paths";
 import { moderateHateSpeech } from 'lib/moderateHateSpeech';
@@ -19,15 +18,19 @@ const handler = fancyApi(
                 if (!overrideMeanTag && !submitAnyways) {
                     res.status(200).send({
                         errors: ["Warning: your comment seems to be mean. You can change it, override the tag or submit it anyways"],
-                        enableOverrideMean: true
+                        enableOverrideMean: true,
+                        enableSubmitAnyways: true
                     });
                     return;
                 }
             } else {
-                res.status(200).send({
-                    errors: ["Error: your comment seems to be mean. Only invited accounts are given the benefit of the doubt."],
-                });
-                return;
+                if (!submitAnyways) {
+                    res.status(200).send({
+                        errors: ["Warning: your comment seems to be mean. You can change it or submit it anyways"],
+                        enableSubmitAnyways: true
+                    });
+                    return;
+                }
             }
         }
         const id = uuidv4();

@@ -8,23 +8,29 @@ const handler = fancyApi(API_FORM_SUBMIT_POST, { withUserId: true, withProfile: 
     async (req, res, props) => {
         const { title, text, link, overrideMeanTag, submitAnyways } = props.body;
         const { profile } = props;
+        console.log({title, text, link, overrideMeanTag, submitAnyways});
         const isMean = await moderateHateSpeech(`${title}\n${text}`);
         if (isMean) {
             if (profile.is_invited) {
                 if (!overrideMeanTag && !submitAnyways) {
                     res.status(200).send({
                         errors: ["Warning: your post seems to be mean. You can change it, override the tag or submit it anyways"],
-                        enableOverrideMean: true
+                        enableOverrideMean: true,
+                        enableSubmitAnyways: true
                     });
                     return;
                 }
             } else {
-                res.status(200).send({
-                    errors: ["Error: your post seems to be mean. Only invited accounts are given the benefit of the doubt."],
-                });
-                return;
+                if (!submitAnyways) {
+                    res.status(200).send({
+                        errors: ["Warning: your post seems to be mean. You can change it or submit it anyways"],
+                        enableSubmitAnyways: true
+                    });
+                    return;
+                }
             }
         }
+
         const id = uuidv4();
 
         let queries: any[] = [];
