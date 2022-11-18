@@ -2,7 +2,7 @@ import { define_tag, tag, VoteDirection } from '@prisma/client';
 import { CommentTreeNode } from "lib/commentTree";
 import { InitialVotesType, PostType, ProfileType } from 'lib/commonTypes';
 import { z } from "zod";
-import { ApiUrlNoArg, createApiUrl, createApiUrlNoBody, createFormUrl } from "./ApiUrl";
+import { ApiUrlNoArg, createApiUrl, createApiUrlNoBody, FormErrorType } from "./ApiUrl";
 
 
 
@@ -50,7 +50,7 @@ export const API_LOAD_REDDIT_POST = createApiUrlNoBody(
 
 // Forms
 
-export const API_FORM_SUBMIT_POST = createFormUrl(
+export const API_FORM_SUBMIT_POST = createApiUrl(
     '/api/forms/post/submit',
     z.undefined(),
     z.object({
@@ -60,15 +60,15 @@ export const API_FORM_SUBMIT_POST = createFormUrl(
         overrideMeanTag: z.boolean().optional(),
         submitAnyways: z.boolean().optional(),
     }))
-    <{ enableOverrideMean?: boolean }, { id: string }>();
+    <(FormErrorType & {enableOverrideMean?: boolean }) | { id: string }>();
 
-export const API_FORM_SEARCH_POST = createFormUrl(
+export const API_FORM_SEARCH_POST = createApiUrl(
     '/api/forms/post/search',
     z.undefined(),
     z.object({ search_term: z.string().max(5000), }))
-    <{ errors: string[], notFound?: string }, { id: string }>();
+    <(FormErrorType & { notFound?: string }) | { id: string }>();
 
-export const API_FORM_SUBMIT_COMMENT = createFormUrl(
+export const API_FORM_SUBMIT_COMMENT = createApiUrl(
     '/api/forms/submitComment',
     z.object({
         post_id: z.string().uuid(),
@@ -79,37 +79,37 @@ export const API_FORM_SUBMIT_COMMENT = createFormUrl(
         overrideMeanTag: z.boolean().optional(),
         submitAnyways: z.boolean().optional(),
     }))
-    <{ errors: string[], enableOverrideMean?: boolean }, { id: string }>();
+    <(FormErrorType & {enableOverrideMean?: boolean }) | { id: string }>();
 
-export const API_FORM_PROFILE = createFormUrl(
+export const API_FORM_PROFILE = createApiUrl(
     '/api/forms/profile',
     z.undefined(),
     z.object({
         filter_tags: z.array(z.object({tag_id: z.string(), value: z.boolean()}))
     }))
-    <{ errors: string[] }, { }>();
+    <FormErrorType | { }>();
 
-export const API_FORM_INVITE_SEND = createFormUrl(
+export const API_FORM_INVITE_SEND = createApiUrl(
     '/api/forms/invite/send',
     z.undefined(),
     z.object({ email: z.string().email(), }))
-    <{ errors: string[] }, { code: string }>();
+    <FormErrorType | { code: string }>();
 
 
-export const API_FORM_INVITE_ACCEPT = createFormUrl(
+export const API_FORM_INVITE_ACCEPT = createApiUrl(
     '/api/forms/invite/accept',
     z.undefined(),
     z.object({ code: z.string(), }))
-    <{ errors: string[] }, {}>();
+    <FormErrorType | {}>();
 
-export const API_FORM_TAG_CREATE = createFormUrl(
+export const API_FORM_TAG_CREATE = createApiUrl(
     '/api/forms/tag/create',
     z.undefined(),
     z.object({ tag_id: z.string(), }))
-    <{ errors: string[] }, { tags: define_tag[] }>();
+    <FormErrorType | { tags: define_tag[] }>();
 
-export const API_FORM_TAG_SET = createFormUrl(
+export const API_FORM_TAG_SET = createApiUrl(
     '/api/forms/tag/set',
     z.object({thing_id: z.string().uuid()}),
     z.array(z.object({tag_id: z.string(), value: z.boolean()})))
-    <{ errors: string[] }, { tags: {[key:string]:tag} }>();
+    <FormErrorType | { tags: {[key:string]:tag} }>();

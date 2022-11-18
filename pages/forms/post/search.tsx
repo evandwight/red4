@@ -21,7 +21,7 @@ export default function SearchPost() {
         return API_LOAD_REDDIT_POST.post({ id: notFound })
             .then(response => { router.push(POST_DETAIL(response.data.id)) })
     };
-    const handleSubredditSearch = (event) => {
+    const handleSubredditSearch = async (event) => {
         event.preventDefault();
         router.push(POSTS({page: "1", sort:"hot", sub: event.target?.subreddit?.value}))
     }

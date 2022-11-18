@@ -1,17 +1,19 @@
-import { FormErrorType, FormUrl } from "lib/api/ApiUrl";
+import { ApiUrl, FormErrorType } from "lib/api/ApiUrl";
 
-export function createCustomHandleSubmit<Q,B,E,S>(apiUrl: FormUrl<Q, B, E, S>,
+export function createCustomHandleSubmit<Q, B, R extends FormErrorType | {}>(
+    apiUrl: ApiUrl<Q, B, R>,
     formToData: (element: HTMLElement) => B,
-    reject: (res: E & FormErrorType) => void, resolve: (res: S) => void, 
-    query?: Q){
+    reject: (res: Extract<FormErrorType, R>) => void,
+    resolve: (res: Exclude<R, FormErrorType>) => void,
+    query?: Q) {
     return async (event): Promise<void> => {
         event.preventDefault();
         const data = formToData(event.target);
-        const res =  await apiUrl.post(query as Q, data as B);
+        const res = await apiUrl.post(query as Q, data);
         if ("errors" in res.data) {
-            reject(res.data);
+            reject(res.data as Extract<FormErrorType, R>);
         } else {
-            resolve(res.data);
+            resolve(res.data as Exclude<R, FormErrorType>);
         }
     }
 }
@@ -28,12 +30,15 @@ export function formEle2Value(element) {
     }
 }
 
-export function createHandleSubmit<Q,B,E,S>(fields: string[], apiUrl: FormUrl<Q, B, E, S>,
-    reject: (res: E & FormErrorType) => void, resolve: (res: S) => void, 
-    query?: Q){
-        const formToData = (target) => fields.reduce((pv, cv) => {
-            pv[cv] = formEle2Value(target[cv]);
-            return pv;
-        }, {}) as B;
-    return createCustomHandleSubmit(apiUrl, formToData,reject, resolve, query);
+export function createHandleSubmit<Q, B, R extends FormErrorType | {}>(
+    fields: string[],
+    apiUrl: ApiUrl<Q, B, R>,
+    reject: (res: Extract<FormErrorType, R>) => void,
+    resolve: (res: Exclude<R, FormErrorType>) => void,
+    query?: Q) {
+    const formToData = (target): B => fields.reduce((pv, cv) => {
+        pv[cv] = formEle2Value(target[cv]);
+        return pv;
+    }, {}) as B;
+    return createCustomHandleSubmit(apiUrl, formToData, reject, resolve, query);
 }

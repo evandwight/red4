@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { toQueryStr } from "lib/utils";
 
+export type FormErrorType = { errors: string[] };
 export type getZodType<T> = T extends Zod.Schema<infer U> ? U : any;
 
 export function createApiUrl<A extends Zod.Schema, B extends Zod.Schema>(path: string, querySchema: A, bodySchema: B) {
@@ -14,7 +15,6 @@ export function createApiUrlNoBody<A extends Zod.Schema>(path: string, querySche
         return new ApiUrlNoBody<getZodType<A>, ReturnType>(path, querySchema);
     }
 }
-
 
 export class ApiUrl<QueryType, BodyType, ReturnType> {
     path: string;
@@ -44,6 +44,7 @@ export class ApiUrl<QueryType, BodyType, ReturnType> {
     }
 }
 
+
 export class ApiUrlNoArg<ReturnType> extends ApiUrl<undefined, undefined, ReturnType> {
     constructor(path) {
         super(path, z.undefined(), z.undefined());
@@ -59,17 +60,5 @@ export class ApiUrlNoBody<QueryType, ReturnType> extends ApiUrl<QueryType, undef
     }
     post(query: QueryType): Promise<{ data: ReturnType }> {
         return super.post(query, undefined);
-    }
-}
-
-export type FormErrorType = { errors: string[] };
-export type FormUrl<Q, B, ErrorType, SuccessType> = ApiUrl<Q, B, (ErrorType & FormErrorType) | SuccessType>;
-
-export function createFormUrl<ZQ extends Zod.Schema, ZB extends Zod.Schema>(path, querySchema: ZQ, bodySchema: ZB)
-    : <E, S>() => FormUrl<getZodType<ZQ>, getZodType<ZB>, E, S> {
-    type Q = getZodType<ZQ>;
-    type B = getZodType<ZB>;
-    return <E, S>(): FormUrl<Q, B, E, S> => {
-        return new ApiUrl<Q, B, (E & FormErrorType) | S>(path, querySchema, bodySchema);
     }
 }
