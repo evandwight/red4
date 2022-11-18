@@ -13,7 +13,7 @@ datasource db {
 model post_with_score {
     id                   String    @id @db.Uuid
     title                String
-    created              DateTime  @default(now())
+    created              DateTime  @db.Timestamptz(0) @default(now())
     reddit_id            String?   @unique
     score                Int       @default(0)
     reddit_score         Int       @default(0)
@@ -26,7 +26,7 @@ model post_with_score {
     text                 String?
     user_name            String?
     is_local             Boolean   @default(false)
-    comment_update_time  DateTime?
+    comment_update_time  DateTime? @db.Timestamptz(0)
     subreddit            String?
     hot                  Float
 }

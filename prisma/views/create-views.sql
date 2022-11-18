@@ -4,7 +4,3 @@ CREATE VIEW "post_with_score" AS
     FROM post
     WHERE created > (NOW() - INTERVAL '1 DAY')
     ORDER BY hot desc;
-
-ALTER VIEW "post_with_score" OWNER TO red4;
-
--- REFRESH MATERIALIZED VIEW "post_with_score";

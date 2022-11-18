@@ -21,6 +21,7 @@ def updateAllListing(context):
         if post.subreddit_name_prefixed[:2] == "r/":
             upsertPost(context, post)
     print('aftersave - ' + str(time.time() - start))
+    print('all ids = ['+ ",".join([post.id for post in all]) + ']')
 
 
 

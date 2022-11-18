@@ -28,5 +28,5 @@ export async function updateComments(id) {
 }
 
 export async function updatePosts() {
-    await runPython('updatePosts.py', []);
+    return await runPython('updatePosts.py', []);
 }

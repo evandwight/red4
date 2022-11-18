@@ -10,7 +10,7 @@ INSERT INTO post
 (id, title,created,reddit_id,reddit_score,upvote_ratio,reddit_link,external_link,thumbnail,text,subreddit,user_name,reddit_comment_count)
 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
 ON CONFLICT (reddit_id)
-DO UPDATE SET reddit_score = %s, upvote_ratio = %s
+DO UPDATE SET reddit_score = %s, upvote_ratio = %s, reddit_comment_count = %s
 RETURNING id;
 """
     data = (
@@ -29,7 +29,8 @@ RETURNING id;
         post.num_comments,
         # ON CONFLICT
         post.score,
-        post.upvote_ratio)
+        post.upvote_ratio,
+        post.num_comments)
     cur.execute(SQL, data)
     id = cur.fetchone()[0]
     if (post.locked):

@@ -11,7 +11,7 @@ datasource db {
 model post {
     id                   String    @id @db.Uuid
     title                String
-    created              DateTime  @default(now())
+    created              DateTime  @db.Timestamptz(0) @default(now())
     reddit_id            String?   @unique
     score                Int       @default(0)
     reddit_score         Int       @default(0)
@@ -24,7 +24,7 @@ model post {
     text                 String?
     user_name            String?
     is_local             Boolean   @default(false)
-    comment_update_time  DateTime?
+    comment_update_time  DateTime? @db.Timestamptz(0)
     subreddit            String?
 
     @@index([created(sort: Desc)])
@@ -50,7 +50,7 @@ model comment {
     post_id          String   @db.Uuid
     parent_id        String?  @db.Uuid
     text             String
-    created          DateTime @default(now())
+    created          DateTime @db.Timestamptz(0) @default(now())
     reddit_id        String?  @unique
     parent_reddit_id String?
     score            Int      @default(0)
@@ -78,7 +78,7 @@ model invitation {
     from_id  String   @db.Uuid
     code     String   @id
     to_email String
-    created  DateTime @default(now())
+    created  DateTime @db.Timestamptz(0) @default(now())
 }
 
 model define_tag {
