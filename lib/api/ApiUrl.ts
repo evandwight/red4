@@ -1,5 +1,6 @@
 import { z } from "zod";
 import axios from "axios";
+import { toQueryStr } from "lib/utils";
 
 export type getZodType<T> = T extends Zod.Schema<infer U> ? U : any;
 
@@ -42,10 +43,7 @@ export class ApiUrl<QueryType, BodyType, ReturnType> {
         return axios.post(process.env.NEXT_PUBLIC_BASE_URL + this.fullPath(query), body);
     }
     queryString(query: QueryType) {
-        return !query ? "" : "?" + Object.getOwnPropertyNames(query)
-            .filter(p => query[p] !== undefined)
-            .map(p => `${p}=${query[p]}`)
-            .join('&');
+        return !query ? "" : "?" + toQueryStr(query);
     }
     fullPath(query: QueryType) {
         return `${this.path}${this.queryString(query)}`;

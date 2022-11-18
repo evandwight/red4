@@ -37,7 +37,7 @@ export function PostSmall({ post, initialVotes, profile }) {
 
 export function Thumbnail({ post }) {
     return <div className="px-2 grow basis-0 flex justify-center ">
-        <div className="w-[70px] h-[70px]">
+        <div className="w-[70px] h-[70px] bg-stone-500">
             {isValidHttpUrl(post.thumbnail)
                 ? <a href={post.external_link}><img loading="lazy" src={post.thumbnail} alt="" /></a>
                 : <QuestionIcon className="fill-stone-300 bg-stone-500" alt="" />

@@ -54,7 +54,7 @@ const PostListing = () => {
             prev: page > 1 ? API_POSTS.queryString({ page: (page - 1).toString(), sub, sort }) : undefined,
         }
         return <div>
-            <div className="text-stone-500">
+            <div className="flex flex-row-reverse text-stone-500">
                 {`${sort} ${sub} (${page})`}
             </div>
             <Posts {... { posts, initialVotes, profile, pageLinks, page }} />

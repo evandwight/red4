@@ -62,5 +62,9 @@ export function notAuthorizedToSignIn(error) {
 }
 
 export function toQueryStr(query: Object) {
-    return Object.entries(query).map(([key, val]) => `${key}=${val}`).join("&");
+    return Object.entries(query)
+        .filter(([key, val]) => val !== undefined)
+        .map(([key, val]) => `${key}=${val}`)
+        .sort()
+        .join("&");
 }
