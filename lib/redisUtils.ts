@@ -3,7 +3,7 @@ import redis from "lib/redis";
 import { ApiError } from "next/dist/server/api-utils";
 
 export function requestToIp(req: NextApiRequest) {
-    return req.headers['HTTP_X_REAL_IP']
+    return req.headers['x-real-ip'];
 }
 
 export function rateLimitByIp(req: NextApiRequest, key: string, ratePerMinute: number){
