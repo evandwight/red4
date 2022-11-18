@@ -61,6 +61,5 @@ def updateComments(context, redditSubmission, postId):
 
 
 if __name__ == "__main__":
-    skipIfBusy()
     context = getTools()
     updateRedditComments(context, sys.argv[1])

@@ -25,6 +25,5 @@ def updateAllListing(context):
 
 
 if __name__ == "__main__":
-    skipIfBusy()
     context = getTools()
     updateAllListing(context)
