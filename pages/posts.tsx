@@ -55,7 +55,7 @@ const PostListing = () => {
         }
         return <div>
             <div className="text-stone-500">
-                {`${sort} ${sub} - ${page}`}
+                {`${sort} ${sub} (${page})`}
             </div>
             <Posts {... { posts, initialVotes, profile, pageLinks, page }} />
         </div>
