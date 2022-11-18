@@ -10,6 +10,9 @@ import { NextPageContext } from "next/types";
 import { useState } from "react";
 
 export async function getServerSideProps(context: NextPageContext) {
+    if (!context.req) {
+        throw new Error("Request undefined");
+    }
     const profile = await assertInvited(context.req);
     const tags = await prisma.define_tag.findMany({ where: { user_id: profile.id } })
     return {

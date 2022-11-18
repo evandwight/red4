@@ -14,6 +14,9 @@ import { z } from 'zod';
 const schema = z.object({ id: z.string() });
 
 export async function getServerSideProps(context: NextPageContext) {
+    if (!context.req) {
+        throw new Error("Request undefined");
+    }
     const profile = await assertInvited(context.req);
     const { id } = schema.parse(context.query);
     const user_id = profile.id;
