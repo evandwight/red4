@@ -11,8 +11,18 @@ export interface CommentTreeNode {
     depth: number,
 }
 
+export const COLLAPSE_COMMENT_LIMIT = 50;
+
 export function createCommentTree(comments: CommentType[]) {
-    let nodes: CommentTreeNode[] = comments.map(c => ({ comment: c, children: [], id: c.id, parent_id: c.parent_id, score: c.reddit_score + c.score, collapseOrder: 0, depth: 0 }));
+    let nodes: CommentTreeNode[] = comments.map(c => ({
+        comment: c,
+        children: [],
+        id: c.id,
+        parent_id: c.parent_id,
+        score: c.reddit_score + c.score,
+        collapseOrder: COLLAPSE_COMMENT_LIMIT + 1,
+        depth: 0
+    }));
     const scoreSort = (a, b) => b.score - a.score;
     nodes.sort(scoreSort);
     const nodeMap: { [key: string]: CommentTreeNode } = nodes.reduce((pv, cv) => { pv[cv.id] = cv; return pv; }, {});
@@ -23,11 +33,15 @@ export function createCommentTree(comments: CommentType[]) {
     setDepth(root);
 
     let heap = new MaxHeap<CommentTreeNode>(val => val.score);
+    root.forEach(val => heap.push(val));
     let count = 1;
-    while (!heap.isEmpty) {
+    while (!heap.isEmpty()) {
         const node = heap.pop();
         node.collapseOrder = count;
         count += 1;
+        if (count > COLLAPSE_COMMENT_LIMIT) {
+            break;
+        }
         node.children.forEach(val => heap.push(val));
     }
 

@@ -5,7 +5,7 @@ import Media from './Media';
 export function MediaElement({ link, redditUrl }: { link: string, redditUrl: string }) {
     if ((/\.(jpe?g|tiff?|png|webp|bmp|svg)$/i).test(link)) {
         return <DirectMediaElement link={link}/>
-    } else if (redditUrl) {
+    } else if (redditUrl && !link.startsWith("https://reddit.com")) {
         return <RedditMediaElement redditUrl={redditUrl}/>
     } else {
         return <></>
