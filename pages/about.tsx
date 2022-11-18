@@ -22,7 +22,7 @@ export default function About() {
         <h2 id="tagging">Tagging</h2>
         <div>
             <p>Most moderation on reddit removes submissions in order to improve content quality. However, removal is heavy handed. Tagging and letting the user decide whether to filter by that tag achieves the same goal, without draconian rule.</p>
-            <p>Further, optional tagging removes the need for trust. If the tag doesn't help you, then you don't need to use it. On mm, any invited account can create a tag and help filter feeds. On mm there are:</p>
+            <p>Further, optional tagging removes the need for trust. If the tag doesn&apos;t help you, then you don&apos;t need to use it. On mm, any invited account can create a tag and help filter feeds. On mm there are:</p>
             <ul className="list-disc list-inside">
                 <li>more people tagging</li>
                 <li>better quality feeds</li>
