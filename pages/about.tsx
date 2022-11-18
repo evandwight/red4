@@ -15,7 +15,7 @@ export default function About() {
                 <li>a tagging system to categorize and filter submissions</li>
                 <li>a user <TextLink href={INVITE_TREE}>invitation tree</TextLink> to combat spam</li>
                 <li>a strong commitment to transparency</li>
-                <li><TextLink href="https://github.com/evandwight/red4">open</TextLink> algorithms</li>
+                <li>open algorithms - <TextLink href="https://github.com/evandwight/red4">github</TextLink></li>
             </ul>
         </div>
         <h2>Questions or comments?</h2>
