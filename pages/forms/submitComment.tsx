@@ -1,5 +1,9 @@
 import AccessDenied from "components/AccessDenied";
 import ErrorList from "components/ErrorList";
+import FancyForm from "components/Form/FancyForm";
+import FormCheckbox from "components/Form/FormCheckbox";
+import FormShortTextField from "components/Form/FormShortTextField";
+import FormTextarea from "components/Form/FormTextarea";
 import { API_FORM_SUBMIT_COMMENT } from "lib/api/paths";
 import { createHandleSubmit2 } from "lib/formUtils";
 import { POST_DETAIL } from "lib/paths";
@@ -13,47 +17,32 @@ export default function SubmitComment() {
     const { data: session, status } = useSession();
     const router = useRouter();
 
-    let handleSubmit = (event) => { };
-    if (router.isReady) {
-        const { parent_id, post_id } = API_FORM_SUBMIT_COMMENT.querySchema.parse(router.query);
-
-        handleSubmit = createHandleSubmit2(
-            ["text", "overrideMeanTag", "submitAnyways"],
-            API_FORM_SUBMIT_COMMENT,
-            setResult,
-            (res) => router.push(POST_DETAIL(res.id)),
-            {parent_id, post_id}
-        );
-    }
-
     if (status === "unauthenticated") {
         return <AccessDenied />
     }
 
-    if (status === "loading") {
+    if (status === "loading" && !router.isReady) {
         return <div>Loading...</div>
     }
+
+    const { parent_id, post_id } = API_FORM_SUBMIT_COMMENT.querySchema.parse(router.query);
+
+    const handleSubmit = createHandleSubmit2(
+        ["text", "overrideMeanTag", "submitAnyways"],
+        API_FORM_SUBMIT_COMMENT,
+        setResult,
+        (res) => router.push(POST_DETAIL(res.id)),
+        { parent_id, post_id }
+    );
+
     return <div>
         <ErrorList errors={errors} />
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="text">Text:</label>
-                <textarea className="w-full h-64 text-black" name="text" cols={40} rows={10} maxLength={5000} id="text"></textarea>
-            </div>
+        <FancyForm onSubmit={handleSubmit} fullWidth>
+            <FormTextarea id="text" label="Text" cols={40} rows={10} passThroughProps={{ maxLength: 5000, autoFocus: true, required: true }} />
             {enableOverrideMean && <>
-                <div>
-                    <label htmlFor="overrideMeanTag">Override mean tag:</label>
-                    <input type="checkbox" name="overrideMeanTag" id="overrideMeanTag" />
-                </div>
-                <div>
-                    <label htmlFor="submitAnyways">Submit anyways:</label>
-                    <input type="checkbox" name="submitAnyways" id="submitAnyways" />
-                </div>
+                <FormCheckbox id="overrideMeanTag" label="Override mean tag" defaultChecked={false} />
+                <FormCheckbox id="submitAnyways" label="Submit anyways" defaultChecked={false} />
             </>}
-            <div>
-                <input className="block w-fit bg-fuchsia-600 hover:bg-fuchsia-800 text-white font-bold my-1 py-1 px-4 rounded"
-                    type="submit" value="Submit" />
-            </div>
-        </form>
+        </FancyForm>
     </div>;
 }

@@ -35,7 +35,7 @@ export default function SubmitPost() {
     }
     return <div>
         <ErrorList errors={errors}/>
-        <FancyForm onSubmit={handleSubmit}>
+        <FancyForm onSubmit={handleSubmit} fullWidth>
             <FormShortTextField id="title" label="Title" passThroughProps={{maxLength:2000, autoFocus:true, required:true}}/>
             <FormUrl id="link" label="Link"/>
             <FormTextarea id="text" label="Text" cols={40} rows={10} passThroughProps={{maxLength:5000}}/>

@@ -14,15 +14,26 @@ const handler = fancyApi(
         const { text, overrideMeanTag, submitAnyways } = props.body;
         const { profile } = props;
         const isMean = await moderateHateSpeech(text);
-        if (isMean && !overrideMeanTag && !submitAnyways) {
-            const errors = ["Warning: mean. You can change your submission, override the tag or submit it anyways"];
-            res.status(200).send({ errors, enableOverrideMean: true });
-            return;
+        if (isMean) {
+            if (profile.is_invited) {
+                if (!overrideMeanTag && !submitAnyways) {
+                    res.status(200).send({
+                        errors: ["Warning: your comment seems to be mean. You can change it, override the tag or submit it anyways"],
+                        enableOverrideMean: true
+                    });
+                    return;
+                }
+            } else {
+                res.status(200).send({
+                    errors: ["Error: your comment seems to be mean. Only invited accounts are given the benefit of the doubt."],
+                });
+                return;
+            }
         }
         const id = uuidv4();
 
         let queries: any[] = [];
-        
+
         queries.push(prisma.comment.create({
             data: {
                 id, parent_id, post_id, text,
@@ -32,11 +43,11 @@ const handler = fancyApi(
         }));
 
         if (!overrideMeanTag && isMean) {
-            queries.push(prisma.tag.create({data: {tag_id: 'mean', thing_id: id, value:isMean}}));
+            queries.push(prisma.tag.create({ data: { tag_id: 'mean', thing_id: id, value: isMean } }));
         }
-        
+
         await prisma.$transaction(queries);
-                
+
         res.status(200).send({ id: post_id });
     });
 export default handler;

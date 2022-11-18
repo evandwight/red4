@@ -56,7 +56,7 @@ export function Container({children, containerRef, showSpinner}) {
     return <div ref={containerRef} className={`h-[75vh] w-full px-2 bg-stone-500 ${showSpinner ? "overflow-y-hidden": "overflow-y-auto"} overflow-x-hidden`}>
         {showSpinner && <div className="relative mx-auto w-full h-full">
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <ImSpinner2 className="w-8 h-8 animate-spin" />
+                <ImSpinner2 className="animate-spin" size={24} />
             </div>
         </div>}
         {children}

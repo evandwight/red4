@@ -16,7 +16,7 @@ export function createHandleSubmit3<Q,B,E,S>(apiUrl: FormUrl<Q, B, E, S>,
     formToData: (element: HTMLElement) => B,
     reject: (res: E & FormErrorType) => void, resolve: (res: S) => void, 
     query?: Q){
-    return async (event) => {
+    return async (event): Promise<void> => {
         event.preventDefault();
         const data = formToData(event.target);
         const res =  await apiUrl.post(query as Q, data as B);
@@ -31,7 +31,7 @@ export function createHandleSubmit3<Q,B,E,S>(apiUrl: FormUrl<Q, B, E, S>,
 export function createHandleSubmit2<Q,B,E,S>(fields: string[], apiUrl: FormUrl<Q, B, E, S>,
     reject: (res: E & FormErrorType) => void, resolve: (res: S) => void, 
     query?: Q){
-    return async (event) => {
+    return async (event): Promise<void> => {
         event.preventDefault();
         const data = fields.reduce((pv, cv) => {
             pv[cv] = formEle2Value(event.target[cv]);
