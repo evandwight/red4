@@ -5,7 +5,7 @@ import FormCheckbox from "components/Form/FormCheckbox";
 import FormShortTextField from "components/Form/FormShortTextField";
 import FormTextarea from "components/Form/FormTextarea";
 import { API_FORM_SUBMIT_COMMENT } from "lib/api/paths";
-import { createHandleSubmit2 } from "lib/formUtils";
+import { createHandleSubmit } from "lib/formUtils";
 import { POST_DETAIL } from "lib/paths";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -27,7 +27,7 @@ export default function SubmitComment() {
 
     const { parent_id, post_id } = API_FORM_SUBMIT_COMMENT.querySchema.parse(router.query);
 
-    const handleSubmit = createHandleSubmit2(
+    const handleSubmit = createHandleSubmit(
         ["text", "overrideMeanTag", "submitAnyways"],
         API_FORM_SUBMIT_COMMENT,
         setResult,

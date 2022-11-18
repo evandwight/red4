@@ -5,7 +5,7 @@ import { TextLink } from "components/TextLink";
 import { API_FORM_PROFILE } from "lib/api/paths";
 import { getUserId } from "lib/api/utils";
 import { ProfileType } from "lib/commonTypes";
-import { createHandleSubmit3 } from "lib/formUtils";
+import { createCustomHandleSubmit } from "lib/formUtils";
 import { getOrCreateProfile } from "lib/getOrCreateProfile";
 import { ACCEPT_INVITE, INVITE, MANAGE_TAG } from "lib/paths";
 import prisma from "lib/prisma";
@@ -24,7 +24,7 @@ export async function getServerSideProps(context: NextPageContext) {
 
 export default function Profile({ profile, define_tags }: { profile: ProfileType, define_tags: define_tag[] }) {
 
-    const handleSubmit = createHandleSubmit3(API_FORM_PROFILE,
+    const handleSubmit = createCustomHandleSubmit(API_FORM_PROFILE,
         (form) => {
             return {
                 filter_tags: define_tags.map(({ tag_id }) => ({ tag_id, value: form[tag_id].checked }))

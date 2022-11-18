@@ -6,7 +6,7 @@ import FormShortTextField from "components/Form/FormShortTextField";
 import FormTextarea from "components/Form/FormTextarea";
 import FormUrl from "components/Form/FormUrl";
 import { API_FORM_SUBMIT_POST } from "lib/api/paths";
-import { createHandleSubmit2 } from "lib/formUtils";
+import { createHandleSubmit } from "lib/formUtils";
 import { POST_DETAIL } from "lib/paths";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -19,7 +19,7 @@ export default function SubmitPost() {
     const { data: session, status } = useSession();
     const router = useRouter();
 
-    const handleSubmit = createHandleSubmit2(
+    const handleSubmit = createHandleSubmit(
         ["title", "link", "text", "overrideMeanTag", "submitAnyways"],
         API_FORM_SUBMIT_POST,
         (res) => setResult(res),

@@ -3,7 +3,7 @@ import FancyForm from "components/Form/FancyForm";
 import FormShortTextField from "components/Form/FormShortTextField";
 import TaskIcon from "components/TaskIcon";
 import { API_FORM_SEARCH_POST, API_LOAD_REDDIT_POST } from "lib/api/paths";
-import { createHandleSubmit2 } from "lib/formUtils";
+import { createHandleSubmit } from "lib/formUtils";
 import { POSTS, POST_DETAIL } from "lib/paths";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -13,7 +13,7 @@ export default function SearchPost() {
     const [result, setResult] = useState<any>({});
     const { errors, notFound } = result;
     const router = useRouter()
-    const handleSubmit = createHandleSubmit2(["search_term"], API_FORM_SEARCH_POST,
+    const handleSubmit = createHandleSubmit(["search_term"], API_FORM_SEARCH_POST,
         setResult,
         (res) => router.push(POST_DETAIL(res.id)),
     );

@@ -4,7 +4,7 @@ import FancyForm from "components/Form/FancyForm";
 import FormCheckbox from "components/Form/FormCheckbox";
 import { API_FORM_TAG_SET } from "lib/api/paths";
 import { assertInvited } from "lib/api/utils";
-import { createHandleSubmit2, createHandleSubmit3 } from "lib/formUtils";
+import { createHandleSubmit, createCustomHandleSubmit } from "lib/formUtils";
 import prisma from "lib/prisma";
 import { listToMap } from "lib/tree";
 import { NextPageContext } from "next/types";
@@ -32,7 +32,7 @@ export default function SetTag({ tags, tagStateInitial, thing_id } : propType ) 
     const [tagState, setTagState] = useState(tagStateInitial);
 
 
-    const handleSubmit = createHandleSubmit3(API_FORM_TAG_SET,
+    const handleSubmit = createCustomHandleSubmit(API_FORM_TAG_SET,
         (element) => tags.map(({tag_id}) => ({tag_id, value: !!(element[tag_id].checked)})),
         (res) => setErrors(res.errors), (res) => { setTagState(res.tags)},
         {thing_id});

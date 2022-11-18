@@ -4,7 +4,7 @@ import FancyForm from "components/Form/FancyForm";
 import FormShortTextField from "components/Form/FormShortTextField";
 import { API_FORM_TAG_CREATE } from "lib/api/paths";
 import { assertInvited } from "lib/api/utils";
-import { createHandleSubmit2 } from "lib/formUtils";
+import { createHandleSubmit } from "lib/formUtils";
 import prisma from "lib/prisma";
 import { NextPageContext } from "next/types";
 import { useState } from "react";
@@ -21,7 +21,7 @@ export default function ManageTag({ initialTags }: {initialTags: define_tag[]}) 
     const [errors, setErrors] = useState<string[]>([]);
     const [tags, setTags] = useState(initialTags);
 
-    const handleSubmit = createHandleSubmit2(["name"], API_FORM_TAG_CREATE,
+    const handleSubmit = createHandleSubmit(["name"], API_FORM_TAG_CREATE,
         (res) => setErrors(res.errors), (res) => setTags(res.tags));
     return <div>
         <ErrorList errors={errors} />
