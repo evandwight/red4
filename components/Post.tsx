@@ -36,13 +36,13 @@ export function PostSmall({ post, initialVotes, profile }) {
 
 
 export function Thumbnail({ post }) {
-    return <div className="px-2 grow basis-0 flex justify-center">
-        {isValidHttpUrl(post.thumbnail)
-            ? <a title="link" href={post.external_link}>
-                <img loading="lazy" className="max-w-none h-min" width={70} height={70} src={post.thumbnail} alt="" />
-            </a>
-            : <QuestionIcon className="max-w-none h-min fill-stone-300 bg-stone-500" width={70} height={70} alt="" />
-        }
+    return <div className="px-2 grow basis-0 flex justify-center ">
+        <div className="w-[70px] h-[70px]">
+            {isValidHttpUrl(post.thumbnail)
+                ? <a href={post.external_link}><img loading="lazy" src={post.thumbnail} alt="" /></a>
+                : <QuestionIcon className="fill-stone-300 bg-stone-500" alt="" />
+            }
+        </div>
     </div>
 }
 
@@ -59,8 +59,8 @@ export function PostInfo({ post }) {
 export function PostButtons({ post, initialVotes, profile, isFull }) {
     const router = useRouter();
     const handleLoadRedditPost = () => {
-        return API_LOAD_REDDIT_POST.post({id:post.reddit_id})
-            .then(response => { router.push(POST_DETAIL(response.data.id))})
+        return API_LOAD_REDDIT_POST.post({ id: post.reddit_id })
+            .then(response => { router.push(POST_DETAIL(response.data.id)) })
     };
 
     return <div className="sm:flex sm:flex-row sm:justify-end">
@@ -68,14 +68,14 @@ export function PostButtons({ post, initialVotes, profile, isFull }) {
             <VoteButtons thing={post} initialVotes={initialVotes} />
             <div id={`external-link-${post.id}`}><IconLink link={post.external_link} Img={LinkSvg} title="external link" /></div>
             <div id={`reddit-link-${post.id}`}><IconLink link={post.reddit_link} Img={RedditLine} title="reddit link" /></div>
-            {profile.has_tags && 
-                <div><NextIconLink href={SET_TAG(post.id)} imageObj={TagIcon} title="set tag"/></div>}
+            {profile.has_tags &&
+                <div><NextIconLink href={SET_TAG(post.id)} imageObj={TagIcon} title="set tag" /></div>}
             {!isFull &&
                 <div><NextIconLink href={POST_DETAIL(post.id)} imageObj={DiscussLine} title="view comments" /></div>}
             {isFull &&
                 <div><NextIconLink href={SUBMIT_COMMENT(post.id, null)} imageObj={ReplyLine} title="submit comment" /> </div>}
             {isFull && !post.is_local &&
-                <div><TaskIcon title="refresh comments" func={handleLoadRedditPost} imageObj={RefreshLine}/></div>}
+                <div><TaskIcon title="refresh comments" func={handleLoadRedditPost} imageObj={RefreshLine} /></div>}
         </div>
     </div>
 }
@@ -87,10 +87,10 @@ export function UserText({ text }) {
 }
 
 export function FullPost({ post, initialVotes, profile }) {
-    console.log({post})
+    console.log({ post })
     return <div className="py-1 sm:py-4">
         <Tags thing={post} />
-        {post.external_link && <MediaElement link={post.external_link} redditUrl={post.reddit_link}/>}
+        {post.external_link && <MediaElement link={post.external_link} redditUrl={post.reddit_link} />}
         <div className="flex flex-row flex-wrap justify-start py-1">
             <Thumbnail post={post} />
             <div className="grow basis-1/2 sm:basis-4/5">
