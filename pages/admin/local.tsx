@@ -8,6 +8,9 @@ import prisma from "lib/prisma";
 import { NextPageContext } from "next";
 
 export async function getServerSideProps(context: NextPageContext) {
+    if (!context.req) {
+        throw new Error("Request undefined");
+    }
     await assertAdmin(context.req);
     const clean = (x) => JSON.parse(JSON.stringify(x));
     const posts = clean(await prisma.post.findMany({ where: { is_local: true } }));

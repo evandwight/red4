@@ -1,11 +1,9 @@
-import { Prisma } from '@prisma/client';
 import { isUniqueConstraintError } from 'lib/api/utils';
 import { ProfileType } from 'lib/commonTypes';
 import prisma from 'lib/prisma';
-import { ApiError } from 'next/dist/server/api-utils';
 import { generateSlug } from 'random-word-slugs';
 
-export async function getOrCreateProfile(id){
+export async function getOrCreateProfile(id: string){
     for (let i = 0; i < 10; i++) {
         const user_name = generateSlug();
         try {

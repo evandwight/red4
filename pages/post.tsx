@@ -25,12 +25,12 @@ export default function PostDetails() {
     useEffect(() => {
         if (router.isReady) {
             const { id } = API_POST.querySchema.parse(router.query);
-            API_POST.post({ id }).then(result => {
+            API_POST.get({ id }).then(result => {
                 setPost(result.data.post);
             }).catch(err => {
                 setError(err?.response?.data || "error");
             });
-            API_COMMENTS.post({ id }).then(result => {
+            API_COMMENTS.get({ id }).then(result => {
                 setComments(result.data.commentTree);
             }).catch(err => {
                 setError(err?.response?.data || "error");

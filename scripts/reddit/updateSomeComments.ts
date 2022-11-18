@@ -1,13 +1,13 @@
 import { API_POSTS } from "lib/api/paths";
 import prisma from "lib/prisma";
 import { updateComments } from "lib/pythonScript";
-import { axiosPost, hoursAgo, runOneTask } from "./util";
+import { axiosGet, hoursAgo, runOneTask } from "./util";
 
 async function main() {
     const hotPosts = await Promise.all([
-        axiosPost(API_POSTS, {sort: "hot", page:"1", sub: "all"}, undefined),
-        axiosPost(API_POSTS, {sort: "hot", page:"2", sub: "all"}, undefined),
-        axiosPost(API_POSTS, {sort: "hot", page:"3", sub: "all"}, undefined),]).then(([a, b, c]) => 
+        axiosGet(API_POSTS, {sort: "hot", page:"1", sub: "all"}),
+        axiosGet(API_POSTS, {sort: "hot", page:"2", sub: "all"}),
+        axiosGet(API_POSTS, {sort: "hot", page:"3", sub: "all"}),]).then(([a, b, c]) => 
             [...a.data.posts, ...b.data.posts, ...c.data.posts].map(post => post.id));
     const posts = await prisma.post.findMany({
         where: {

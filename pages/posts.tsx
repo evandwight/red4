@@ -23,7 +23,7 @@ const PostListing = () => {
     useEffect(() => {
         if (router.isReady) {
             setPosts(null);
-            API_POSTS.post({ page:page.toString(), sub, sort }).then(result => {
+            API_POSTS.get({ page:page.toString(), sub, sort }).then(result => {
                 setPosts(result.data.posts);
             });
         }

@@ -1,4 +1,6 @@
+import { API_GET_PROFILE } from "lib/api/paths";
 import { ProfileType, ThingType } from "lib/commonTypes";
+import { Session } from "next-auth/core/types";
 import { signIn } from "next-auth/react";
 
 export function isValidHttpUrl(string) {

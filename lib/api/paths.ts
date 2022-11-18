@@ -3,11 +3,12 @@ import { CommentTreeNode } from "lib/commentTree";
 import { InitialVotesType, PostType, ProfileType } from 'lib/commonTypes';
 import { z } from "zod";
 import { ApiUrlNoArg, createApiUrl, createApiUrlNoBody, FormErrorType } from "./ApiUrl";
+import { ApiGetNoArg, createApiGet } from "./ApiGet";
 
 
 
 
-export const API_POSTS = createApiUrlNoBody(
+export const API_POSTS = createApiGet(
     '/api/posts',
     z.object({
         page: z.string().regex(/[1-9][0-9]*/).default("1"),
@@ -16,12 +17,12 @@ export const API_POSTS = createApiUrlNoBody(
     }))
     <{ posts: PostType[] }>();
 
-export const API_POST = createApiUrlNoBody(
+export const API_POST = createApiGet(
     '/api/post',
     z.object({ id: z.string().uuid(), }))
     <{ post: PostType }>();
 
-export const API_COMMENTS = createApiUrlNoBody(
+export const API_COMMENTS = createApiGet(
     '/api/comments',
     z.object({ id: z.string().uuid(), }))
     <{ commentTree: CommentTreeNode[] }>();

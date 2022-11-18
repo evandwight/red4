@@ -1,17 +1,18 @@
 import { Prisma } from "@prisma/client";
+import { IncomingMessage } from "http";
 import { getOrCreateProfile } from "lib/getOrCreateProfile";
-import { NextApiRequest, NextApiResponse } from "next";
-import { getToken } from "next-auth/jwt";
+import { NextApiResponse } from "next";
+import { getToken, GetTokenParams } from "next-auth/jwt";
 import { ApiError } from "next/dist/server/api-utils";
 import { ZodError } from "zod";
 
-export function assertPost(req) {
+export function assertPost(req: IncomingMessage) {
     if (req.method !== 'POST') {
         throw new ApiError(405, `Http ${req.method} not allowed`);
     }
 }
 
-export async function assertAdmin(req) {
+export async function assertAdmin(req: IncomingMessage) {
     const id = await getUserId(req);
     const profile = await getOrCreateProfile(id);
     if (!profile.is_admin) {
@@ -20,17 +21,17 @@ export async function assertAdmin(req) {
     return profile
 }
 
-export async function assertInvited(req) {
+export async function assertInvited(req: IncomingMessage) {
     const id = await getUserId(req);
     const profile = await getOrCreateProfile(id);
-    console.log({profile})
+    console.log({ profile })
     if (!profile.is_invited) {
         throw new ApiError(401, "Not invited");
     }
     return profile
 }
 
-export async function getUserId(req) {
+export async function getUserId(req: IncomingMessage) {
     const userId = await getUserIdOrNull(req);
     if (!userId) {
         throw new ApiError(401, "Not logged in");
@@ -38,7 +39,7 @@ export async function getUserId(req) {
     return userId;
 }
 
-export async function getEmail(req) {
+export async function getEmail(req: IncomingMessage) {
     const jwt = await getJwtOrNull(req);
     if (!jwt?.email) {
         throw new ApiError(500, "No email associated with your account");
@@ -46,8 +47,8 @@ export async function getEmail(req) {
     return jwt.email;
 }
 
-export async function getJwtOrNull(req) {
-    let jwt = await getToken({ req });
+export async function getJwtOrNull(req: IncomingMessage) {
+    let jwt = await getToken({ req } as GetTokenParams<false>);
     if (!jwt) {
         return null;
     }
@@ -57,7 +58,7 @@ export async function getJwtOrNull(req) {
     return jwt;
 }
 
-export async function getUserIdOrNull(req) {
+export async function getUserIdOrNull(req: IncomingMessage) {
     return (await getJwtOrNull(req))?.sub || null;
 }
 export function handleApiError(err, res: NextApiResponse) {

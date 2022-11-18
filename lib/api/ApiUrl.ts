@@ -29,12 +29,12 @@ export class ApiUrl<QueryType, BodyType, ReturnType> {
         return fetch(this.fullPath(query as QueryType), {
             method: 'POST',
             headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(body)
-          }).then(response => response.json())
-          .then(json => ({data: json}));
+        }).then(response => response.json())
+            .then(json => ({ data: json }));
     }
     queryString(query: QueryType) {
         return !query ? "" : "?" + toQueryStr(query);
@@ -43,7 +43,6 @@ export class ApiUrl<QueryType, BodyType, ReturnType> {
         return `${this.path}${this.queryString(query)}`;
     }
 }
-
 
 export class ApiUrlNoArg<ReturnType> extends ApiUrl<undefined, undefined, ReturnType> {
     constructor(path) {

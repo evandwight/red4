@@ -9,11 +9,12 @@ import { createCustomHandleSubmit } from "lib/formUtils";
 import { getOrCreateProfile } from "lib/getOrCreateProfile";
 import { ACCEPT_INVITE, INVITE, MANAGE_TAG } from "lib/paths";
 import prisma from "lib/prisma";
-import Link from "next/link";
 import { NextPageContext } from "next/types";
-import { useState } from "react";
 
 export async function getServerSideProps(context: NextPageContext) {
+    if (!context.req) {
+        throw new Error("Request undefined");
+    }
     const userId = await getUserId(context.req);
     const profile = await getOrCreateProfile(userId);
     const define_tags = await prisma.define_tag.findMany();
