@@ -14,14 +14,15 @@ import TagIcon from 'svg/tag-line.svg';
 
 
 
-type CommentsType = { post: PostType, nodes: CommentTreeNode[], profile: ProfileType, initialVotes: InitialVotesType }
-export function Comments({ post, nodes, profile, initialVotes }: CommentsType) {
-    const [collapse, setCollapse] = useState(true);
+type CommentsType = { post: PostType, nodes: CommentTreeNode[], profile: ProfileType, initialVotes: InitialVotesType,
+    collapseChildren? : boolean }
+export function Comments({ post, nodes, profile, initialVotes, collapseChildren = true }: CommentsType) {
+    const [collapse, setCollapse] = useState(collapseChildren);
     const expandedNodes = collapse ? nodes.filter(node => node.collapseOrder <= COLLAPSE_COMMENT_LIMIT) : nodes;
     const collapsedNodeCount = nodes.length - expandedNodes.length;
     return <div>
         {expandedNodes.map((node, i) =>
-            <Comment key={i} {...{ node, profile, post, initialVotes }} />)}
+            <Comment key={i} {...{ node, profile, post, initialVotes, collapseChildren:collapse }} />)}
         {collapse && collapsedNodeCount > 0 && <CommentDepth depth={nodes[0].depth}>
             <button className="flex flex-row" onClick={() => setCollapse(false)}>
                 <AddIcon className="w-6 fill-fuchsia-500 pr-1" /> 
@@ -31,8 +32,9 @@ export function Comments({ post, nodes, profile, initialVotes }: CommentsType) {
     </div>
 }
 
-type ReactCommentType = { post: PostType, node: CommentTreeNode, profile: ProfileType, initialVotes: InitialVotesType }
-export function Comment({ node, profile, post, initialVotes }: ReactCommentType) {
+type ReactCommentType = { post: PostType, node: CommentTreeNode, profile: ProfileType, initialVotes: InitialVotesType,
+    collapseChildren : boolean}
+export function Comment({ node, profile, post, initialVotes, collapseChildren}: ReactCommentType) {
     const { comment } = node;
     const [expand, setExpand] = useState(true);
     const toggleExpand = useCallback(() => setExpand(!expand), [expand, setExpand]);
@@ -50,7 +52,7 @@ export function Comment({ node, profile, post, initialVotes }: ReactCommentType)
             <hr className="border-stone-500" />
         </CommentDepth>
         {show && expand && <div>
-            <Comments {... { post, nodes: node.children, profile, initialVotes }} />
+            <Comments {... { post, nodes: node.children, profile, initialVotes, collapseChildren }} />
         </div>}
     </div>
 }
