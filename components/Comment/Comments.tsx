@@ -41,11 +41,11 @@ export function Comment({ node, profile, post, initialVotes, collapseChildren}: 
     const { show, reason } = filterByProfile(comment, profile);
     return <div id={`comment-${node.id}`}>
         <CommentDepth depth={node.depth}>
-            <CommentInfo {...{ comment, expand, toggleExpand }} />
+        <CommentInfo {...{ comment, expand, toggleExpand }} />
             {show && expand
                 ? <div>
-                    <Tags thing={{ ...comment }} />
-                    <div><UserText text={comment.text} /></div>
+                    <div onClick={toggleExpand}><Tags thing={{ ...comment }} /></div>
+                    <div onClick={toggleExpand}><UserText text={comment.text} /></div>
                     <CommentButtons {...{ post, comment, initialVotes, profile }} />
                 </div>
                 : expand ? <div className="bg-stone-500 text-center my-2">{reason}</div> : <></>}
@@ -77,7 +77,7 @@ export function ToggleExpandButton({ expand, toggleExpand }: { expand: boolean, 
 
 type CommentInfoType = { comment: CommentType, expand: boolean, toggleExpand: () => void }
 export function CommentInfo({ comment, expand, toggleExpand }: CommentInfoType) {
-    return <div className="flex flex-row flex-wrap justify-left py-1 text-stone-500 text-center gap-x-1">
+    return <div onClick={toggleExpand} className="flex flex-row flex-wrap justify-left py-1 text-stone-500 text-center gap-x-1">
         <div className="px-1"><ToggleExpandButton {... {expand, toggleExpand}}/></div>
         <div className="px-1">by {`/u/${comment.user_name || "anon"}`}</div>
         <div className="px-1">{timeSinceShort(comment.created)}</div>
