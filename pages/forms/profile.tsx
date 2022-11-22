@@ -7,7 +7,7 @@ import { getUserId } from "lib/api/utils";
 import { ProfileType } from "lib/commonTypes";
 import { createCustomHandleSubmit } from "lib/formUtils";
 import { getOrCreateProfile } from "lib/getOrCreateProfile";
-import { ACCEPT_INVITE, INVITE, MANAGE_TAG } from "lib/paths";
+import { ACCEPT_INVITE, ADMIN_LOCAL, INVITE, MANAGE_TAG } from "lib/paths";
 import prisma from "lib/prisma";
 import { NextPageContext } from "next/types";
 
@@ -35,6 +35,7 @@ export default function Profile({ profile, define_tags }: { profile: ProfileType
         () => location.reload());
 
     return <div>
+        {profile.is_admin && <div><TextLink href={ADMIN_LOCAL}>admin local</TextLink></div>}
         <div>{profile.is_invited
             ? <TextLink href={INVITE}>
                 Invite a friend

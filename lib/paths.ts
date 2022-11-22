@@ -23,3 +23,7 @@ export const ACCEPT_INVITE = '/forms/invite';
 
 export const MANAGE_TAG = '/forms/tag/manage';
 export const SET_TAG = (id) => `/forms/tag/set?id=${id}`;
+
+// Admin
+
+export const ADMIN_LOCAL = '/admin/local';
