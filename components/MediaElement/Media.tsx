@@ -54,7 +54,6 @@ const Media = ({
     } else if (isMP4 && !isIFrame) {
         child = <VideoHandler {...{videoInfo, containerSize}} onLoadingComplete={onLoaded} />
     } else {
-        console.log({post})
         child = <a title="external link" href={post.external_link}>
             whoops
         </a>;

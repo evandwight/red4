@@ -85,7 +85,6 @@ export function UserText({ text }) {
 }
 
 export function FullPost({ post, initialVotes, profile }) {
-    console.log({ post })
     return <div className="py-1 sm:py-4">
         <Tags thing={post} />
         {post.external_link && <MediaElement link={post.external_link} redditUrl={post.reddit_link} />}
