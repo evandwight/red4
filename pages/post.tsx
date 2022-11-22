@@ -3,6 +3,7 @@ import { FullPost } from "components/Post";
 import { API_COMMENTS, API_GET_PROFILE, API_GET_VOTES, API_POST } from "lib/api/paths";
 import { CommentTreeNode } from "lib/commentTree";
 import { InitialVotesType, PostType, ProfileType } from "lib/commonTypes";
+import { useRestoreScrollPosition } from "lib/restoreScroll";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -12,7 +13,7 @@ export default function PostDetails() {
     const [post, setPost] = useState<PostType | null>(null);
     const [comments, setComments] = useState<CommentTreeNode[] | null>(null);
     const [initialVotes, setInitialVotes] = useState<InitialVotesType>(null);
-    const [error, setError] = useState<string|null>(null);
+    const [error, setError] = useState<string | null>(null);
     const { data: session, status } = useSession();
 
     const [profile, setProfile] = useState<ProfileType | null>(null);
@@ -48,6 +49,8 @@ export default function PostDetails() {
         }
     }, [post, comments, status]);
 
+    useRestoreScrollPosition(!post || !profile || !comments);
+
     if (error) {
         return <div>{error}</div>
     } else if (!post || !profile) {
@@ -57,7 +60,7 @@ export default function PostDetails() {
             <FullPost {... { post, initialVotes, profile }} />
             <hr className="border-stone-500"></hr>
             {comments ?
-                <Comments {... { post, nodes: comments, initialCollapse: {}, overrideCollapse: false, parentId: null, initialVotes, profile}} />
+                <Comments {... { post, nodes: comments, initialCollapse: {}, overrideCollapse: false, parentId: null, initialVotes, profile }} />
                 : <div> Loading </div>}
         </div>
     }

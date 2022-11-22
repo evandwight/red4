@@ -5,6 +5,7 @@ import { Posts } from "components/Posts";
 import { API_GET_PROFILE, API_GET_VOTES, API_POSTS } from "lib/api/paths";
 import { InitialVotesType, PostType } from "lib/commonTypes";
 import { ABOUT, SEARCH_POST, SUBMIT_POST } from "lib/paths";
+import { useRestoreScrollPosition } from "lib/restoreScroll";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -23,7 +24,7 @@ const PostListing = () => {
     useEffect(() => {
         if (router.isReady) {
             setPosts(null);
-            API_POSTS.get({ page:page.toString(), sub, sort }).then(result => {
+            API_POSTS.get({ page: page.toString(), sub, sort }).then(result => {
                 setPosts(result.data.posts);
             });
         }
@@ -42,11 +43,14 @@ const PostListing = () => {
         }
         else if (posts && status === "authenticated") {
             const thing_ids = posts.map(post => post.id);
-            API_GET_VOTES.post(undefined, {thing_ids}).then((results) => setInitialVotes(results.data.votes));
+            API_GET_VOTES.post(undefined, { thing_ids }).then((results) => setInitialVotes(results.data.votes));
         }
-    },[posts, status]);
+    }, [posts, status]);
 
-    if (!posts || !profile) {
+    const loading = !posts || !profile;
+    useRestoreScrollPosition(loading);
+
+    if (loading) {
         return <div>Loading</div>
     } else {
         const pageLinks = {
