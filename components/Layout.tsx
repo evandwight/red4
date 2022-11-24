@@ -18,9 +18,10 @@ export default function Layout({ children, extraButtons }: { children: any, extr
         <div className="min-h-screen mx-auto max-w-5xl px-1 bg-stone-900 text-stone-300">
             <div className="flex flex-row w-full">
                 <div className="text-fuchsia-500 font-bold">
-                    <Link href="/posts">
+                    {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                    <a href="/posts">
                         Mm
-                    </Link>
+                    </a>
                 </div>
                 <div className="ml-auto flex flex-row justify-around">
                     {extraButtons}
