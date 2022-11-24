@@ -3,7 +3,7 @@ import { extractLinks } from "lib/userText";
 
 export function UserText({ text }) {
     const { text: newText, links } = extractLinks(text);
-    return <div>
+    return <div className="break-words">
         <div>
             {newText.split('\n\n').map((t, i) => <p key={i}>{t}</p>)}
         </div>
