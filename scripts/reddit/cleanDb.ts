@@ -1,5 +1,5 @@
 import prisma from "lib/prisma";
-import { alwaysKeepSubs } from "./util";
+import { alwaysKeepSubs, runOneTask } from "./util";
 
 async function cleanPosts() {
     const oldDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
@@ -22,5 +22,5 @@ async function main() {
 }
 
 if (require.main === module) {
-    main();
+    runOneTask('cleandb',main);
 }
