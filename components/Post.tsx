@@ -16,6 +16,7 @@ import RefreshLine from 'svg/refresh-line.svg';
 import ReplyLine from 'svg/reply-line.svg';
 import TagIcon from 'svg/tag-line.svg';
 import QuestionIcon from 'svg/question-line.svg';
+import { UserText } from "./UserText";
 
 export function PostSmall({ post, initialVotes, profile }) {
     return <div>
@@ -76,12 +77,6 @@ export function PostButtons({ post, initialVotes, profile, isFull }) {
                 <div><TaskIcon title="refresh comments" func={handleLoadRedditPost} imageObj={RefreshLine} /></div>}
         </div>
     </div>
-}
-
-export function UserText({ text }) {
-    return <>
-        {text.split('\n\n').map((t, i) => <p key={i}>{t}</p>)}
-    </>
 }
 
 export function FullPost({ post, initialVotes, profile }) {

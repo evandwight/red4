@@ -1,5 +1,5 @@
 import { IconLink } from 'components/IconLink';
-import { UserText } from 'components/Post';
+import { UserText } from "components/UserText";
 import { Tags } from 'components/Thing/Tags';
 import { VoteButtons } from 'components/VoteButtons';
 import { COLLAPSE_COMMENT_LIMIT, CommentTreeNode } from 'lib/commentTree';

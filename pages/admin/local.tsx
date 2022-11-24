@@ -1,6 +1,7 @@
 import { profile } from "@prisma/client";
 import { CommentInfo } from "components/Comment/Comments";
-import { PostSmall, UserText } from "components/Post";
+import { PostSmall } from "components/Post";
+import { UserText } from "components/UserText";
 import { Tags } from "components/Thing/Tags";
 import { assertAdmin } from "lib/api/utils";
 import { CommentType, PostType, ProfileType } from "lib/commonTypes";
