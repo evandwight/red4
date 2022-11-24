@@ -35,8 +35,13 @@ export default function Profile({ profile, define_tags }: { profile: ProfileType
         () => location.reload());
 
     return <div>
-        {profile.is_admin && <div><TextLink href={ADMIN_LOCAL}>admin local</TextLink></div>}
-        <div>{profile.is_invited
+        {profile.is_admin && <div>
+            <h2>Admin</h2>
+            <TextLink href={ADMIN_LOCAL}>admin local</TextLink>
+        </div>}
+        <div>
+            <h2>Invites</h2>
+            {profile.is_invited
             ? <TextLink href={INVITE}>
                 Invite a friend
             </TextLink>
