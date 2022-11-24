@@ -14,34 +14,38 @@ import TagIcon from 'svg/tag-line.svg';
 
 
 
-type CommentsType = { post: PostType, nodes: CommentTreeNode[], profile: ProfileType, initialVotes: InitialVotesType,
-    collapseChildren? : boolean }
+type CommentsType = {
+    post: PostType, nodes: CommentTreeNode[], profile: ProfileType, initialVotes: InitialVotesType,
+    collapseChildren?: boolean
+}
 export function Comments({ post, nodes, profile, initialVotes, collapseChildren = true }: CommentsType) {
     const [collapse, setCollapse] = useState(collapseChildren);
     const expandedNodes = collapse ? nodes.filter(node => node.collapseOrder <= COLLAPSE_COMMENT_LIMIT) : nodes;
     const collapsedNodeCount = nodes.length - expandedNodes.length;
     return <div>
         {expandedNodes.map((node, i) =>
-            <Comment key={i} {...{ node, profile, post, initialVotes, collapseChildren:collapse }} />)}
+            <Comment key={i} {...{ node, profile, post, initialVotes, collapseChildren: collapse }} />)}
         {collapse && collapsedNodeCount > 0 && <CommentDepth depth={nodes[0].depth}>
             <button className="flex flex-row" onClick={() => setCollapse(false)}>
-                <AddIcon className="w-6 fill-fuchsia-500 pr-1" /> 
+                <AddIcon className="w-6 fill-fuchsia-500 pr-1" />
                 {collapsedNodeCount} more {collapsedNodeCount === 1 ? "reply" : "replies"}
             </button>
         </CommentDepth>}
     </div>
 }
 
-type ReactCommentType = { post: PostType, node: CommentTreeNode, profile: ProfileType, initialVotes: InitialVotesType,
-    collapseChildren : boolean}
-export function Comment({ node, profile, post, initialVotes, collapseChildren}: ReactCommentType) {
+type ReactCommentType = {
+    post: PostType, node: CommentTreeNode, profile: ProfileType, initialVotes: InitialVotesType,
+    collapseChildren: boolean
+}
+export function Comment({ node, profile, post, initialVotes, collapseChildren }: ReactCommentType) {
     const { comment } = node;
     const [expand, setExpand] = useState(true);
     const toggleExpand = useCallback(() => setExpand(!expand), [expand, setExpand]);
     const { show, reason } = filterByProfile(comment, profile);
     return <div id={`comment-${node.id}`}>
         <CommentDepth depth={node.depth}>
-        <CommentInfo {...{ comment, expand, toggleExpand }} />
+            <CommentInfo {...{ comment, expand, toggleExpand }} />
             {show && expand
                 ? <div>
                     <div onClick={toggleExpand}><Tags thing={{ ...comment }} /></div>
@@ -62,7 +66,7 @@ export function CommentDepth({ depth, children }: { depth: number, children: JSX
         {depth > 0 && <div className={`flex flex-none justify-end px-2 comment-depth-${Math.min(depth - 1, 9)}`}>
             <div className={`w-1 h-full py-2 rounded-sm self-center comment-depth-color-${(depth - 1) % 6}`} />
         </div>}
-        <div className="grow px-2">
+        <div className="grow px-2 overflow-hidden">
             {children}
         </div>
     </div>
@@ -78,7 +82,7 @@ export function ToggleExpandButton({ expand, toggleExpand }: { expand: boolean, 
 type CommentInfoType = { comment: CommentType, expand: boolean, toggleExpand: () => void }
 export function CommentInfo({ comment, expand, toggleExpand }: CommentInfoType) {
     return <div onClick={toggleExpand} className="flex flex-row flex-wrap justify-left py-1 text-stone-500 text-center gap-x-1">
-        <div className="px-1"><ToggleExpandButton {... {expand, toggleExpand}}/></div>
+        <div className="px-1"><ToggleExpandButton {... { expand, toggleExpand }} /></div>
         <div className="px-1">by {`/u/${comment.user_name || "anon"}`}</div>
         <div className="px-1">{timeSinceShort(comment.created)}</div>
     </div>
