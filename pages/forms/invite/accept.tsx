@@ -7,7 +7,7 @@ import { PROFILE } from "lib/paths";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export default function SendInvite() {
+export default function AcceptInvite() {
     const [errors, setErrors] = useState<string[] | null>(null);
     const router = useRouter();
     const handleSubmit = createHandleSubmit(["code"], API_FORM_INVITE_ACCEPT,

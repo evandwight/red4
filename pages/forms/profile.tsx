@@ -1,4 +1,4 @@
-import { define_tag } from "@prisma/client";
+import type { define_tag } from "@prisma/client";
 import FancyForm from "components/Form/FancyForm";
 import FormCheckbox from "components/Form/FormCheckbox";
 import { TextLink } from "components/TextLink";

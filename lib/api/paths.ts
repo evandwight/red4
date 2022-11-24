@@ -2,8 +2,8 @@ import { define_tag, tag, VoteDirection } from '@prisma/client';
 import { CommentTreeNode } from "lib/commentTree";
 import { InitialVotesType, PostType, ProfileType } from 'lib/commonTypes';
 import { z } from "zod";
+import { createApiGet } from "./ApiGet";
 import { ApiUrlNoArg, createApiUrl, createApiUrlNoBody, FormErrorType } from "./ApiUrl";
-import { ApiGetNoArg, createApiGet } from "./ApiGet";
 
 
 
