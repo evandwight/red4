@@ -1,29 +1,24 @@
-import type { define_tag } from "@prisma/client";
 import FancyForm from "components/Form/FancyForm";
 import FormCheckbox from "components/Form/FormCheckbox";
 import { TextLink } from "components/TextLink";
 import { API_FORM_PROFILE } from "lib/api/paths";
 import { getUserId } from "lib/api/utils";
-import { ProfileType } from "lib/commonTypes";
 import { createCustomHandleSubmit } from "lib/formUtils";
 import { getOrCreateProfile } from "lib/getOrCreateProfile";
+import { ExtractSSProps, serverSideErrorHandler } from "lib/pageUtils";
 import { ACCEPT_INVITE, ADMIN_LOCAL, INVITE, MANAGE_TAG } from "lib/paths";
 import prisma from "lib/prisma";
-import { NextPageContext } from "next/types";
 
-export async function getServerSideProps(context: NextPageContext) {
-    if (!context.req) {
-        throw new Error("Request undefined");
-    }
-    const userId = await getUserId(context.req);
+export const getServerSideProps = serverSideErrorHandler(async (context, req) => {
+    const userId = await getUserId(req);
     const profile = await getOrCreateProfile(userId);
     const define_tags = await prisma.define_tag.findMany();
     return {
         props: { profile, define_tags }
     }
-}
+});
 
-export default function Profile({ profile, define_tags }: { profile: ProfileType, define_tags: define_tag[] }) {
+export default function Profile({ profile, define_tags }: ExtractSSProps<typeof getServerSideProps>) {
 
     const handleSubmit = createCustomHandleSubmit(API_FORM_PROFILE,
         (form) => {

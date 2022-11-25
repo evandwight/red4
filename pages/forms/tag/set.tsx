@@ -5,6 +5,7 @@ import FormCheckbox from "components/Form/FormCheckbox";
 import { API_FORM_TAG_SET } from "lib/api/paths";
 import { assertInvited } from "lib/api/utils";
 import { createHandleSubmit, createCustomHandleSubmit } from "lib/formUtils";
+import { ExtractSSProps, serverSideErrorHandler } from "lib/pageUtils";
 import prisma from "lib/prisma";
 import { listToMap } from "lib/tree";
 import { NextPageContext } from "next/types";
@@ -13,11 +14,8 @@ import { z } from 'zod';
 
 const schema = z.object({ id: z.string() });
 
-export async function getServerSideProps(context: NextPageContext) {
-    if (!context.req) {
-        throw new Error("Request undefined");
-    }
-    const profile = await assertInvited(context.req);
+export const getServerSideProps = serverSideErrorHandler(async (context, req) => {
+    const profile = await assertInvited(req);
     const { id } = schema.parse(context.query);
     const user_id = profile.id;
     const tags = await prisma.define_tag.findMany({ where: { user_id } })
@@ -27,10 +25,9 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
         props: { tags, tagStateInitial, thing_id: id }
     }
-}
+});
 
-type propType = {tags: define_tag[], tagStateInitial: {[key:string]:tag}, thing_id: string}
-export default function SetTag({ tags, tagStateInitial, thing_id } : propType ) {
+export default function SetTag({ tags, tagStateInitial, thing_id } : ExtractSSProps<typeof getServerSideProps> ) {
     const [errors, setErrors] = useState<string[]>([]);
     const [tagState, setTagState] = useState(tagStateInitial);
 

@@ -19,6 +19,7 @@ const PostListing = () => {
     const page = parseInt(pageStr || "1");
     const [posts, setPosts] = useState<PostType[] | null>(null);
     const [initialVotes, setInitialVotes] = useState<InitialVotesType>(null);
+    const [error, setError] = useState<string | null>(null);
     const { data: session, status } = useSession();
 
     useEffect(() => {
@@ -26,14 +27,16 @@ const PostListing = () => {
             setPosts(null);
             API_POSTS.get({ page: page.toString(), sub, sort }).then(result => {
                 setPosts(result.data.posts);
-            });
+            }).catch(err => setError(err?.response?.data || "error"));
         }
     }, [router.isReady, page, sub, sort]);
 
 
     const [profile, setProfile] = useState<any>(null);
     useEffect(() => {
-        API_GET_PROFILE.post().then(result => setProfile(result.data.profile));
+        API_GET_PROFILE.post()
+            .then(result => setProfile(result.data.profile))
+            .catch(err => setError(err?.response?.data || "error"));;
     }, [])
 
     useEffect(() => {
@@ -50,7 +53,9 @@ const PostListing = () => {
     const loading = !posts || !profile;
     useRestoreScrollPosition(loading);
 
-    if (loading) {
+    if (error) {
+        return <div>{error}</div>
+    } else if (loading) {
         return <div>Loading</div>
     } else {
         const pageLinks = {

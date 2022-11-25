@@ -1,26 +1,22 @@
-import { define_tag } from "@prisma/client";
 import ErrorList from "components/ErrorList";
 import FancyForm from "components/Form/FancyForm";
 import FormShortTextField from "components/Form/FormShortTextField";
 import { API_FORM_TAG_CREATE } from "lib/api/paths";
 import { assertInvited } from "lib/api/utils";
 import { createHandleSubmit } from "lib/formUtils";
+import { ExtractSSProps, serverSideErrorHandler } from "lib/pageUtils";
 import prisma from "lib/prisma";
-import { NextPageContext } from "next/types";
 import { useState } from "react";
 
-export async function getServerSideProps(context: NextPageContext) {
-    if (!context.req) {
-        throw new Error("Request undefined");
-    }
-    const profile = await assertInvited(context.req);
+export const getServerSideProps = serverSideErrorHandler(async (context, req) => {
+    const profile = await assertInvited(req);
     const tags = await prisma.define_tag.findMany({ where: { user_id: profile.id } })
     return {
         props: { initialTags: tags }
     }
-}
+});
 
-export default function ManageTag({ initialTags }: {initialTags: define_tag[]}) {
+export default function ManageTag({ initialTags }: ExtractSSProps<typeof getServerSideProps>) {
     const [errors, setErrors] = useState<string[]>([]);
     const [tags, setTags] = useState(initialTags);
 
