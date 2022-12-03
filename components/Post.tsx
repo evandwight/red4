@@ -6,7 +6,7 @@ import { Tags } from "components/Thing/Tags";
 import { VoteButtons } from "components/VoteButtons";
 import { API_LOAD_REDDIT_POST } from "lib/api/paths";
 import { POST_DETAIL, SET_TAG, SUBMIT_COMMENT } from "lib/paths";
-import { isValidHttpUrl, netloc, timeSinceShort } from "lib/utils";
+import { isValidHttpUrl, netloc, notAuthorizedToSignIn, timeSinceShort } from "lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import DiscussLine from 'svg/discuss-line.svg';
@@ -60,6 +60,7 @@ export function PostButtons({ post, initialVotes, profile, isFull }) {
     const handleLoadRedditPost = () => {
         return API_LOAD_REDDIT_POST.post({ id: post.reddit_id })
             .then(response => { router.push(POST_DETAIL(response.data.id)) })
+            .catch(notAuthorizedToSignIn);
     };
 
     return <div className="sm:flex sm:flex-row sm:justify-end">

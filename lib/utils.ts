@@ -58,7 +58,7 @@ export function commentTreeToList(nodes) {
 }
 
 export function notAuthorizedToSignIn(error) {
-    if (error?.response?.status === 401) {
+    if (error?.status === 401) {
         signIn('cognito');
     }
 }

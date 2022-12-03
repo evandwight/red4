@@ -64,9 +64,9 @@ export async function getUserIdOrNull(req: IncomingMessage) {
 export function handleApiError(err, res: NextApiResponse) {
     console.error(err);
     if (err instanceof ApiError) {
-        res.status(err.statusCode).send(err.message);
+        res.status(err.statusCode).send({message: err.message});
     } else if (err instanceof ZodError) {
-        res.status(400).send("Invalid arguments");
+        res.status(400).send({message:"Invalid arguments"});
     } else {
         throw err;
     }

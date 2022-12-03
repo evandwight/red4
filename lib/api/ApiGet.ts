@@ -11,7 +11,12 @@ export class ApiGet<QueryType, ReturnType> {
     }
     get(query: QueryType): Promise<{ data: ReturnType; }> {
         return fetch(this.fullPath(query as QueryType))
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw response;
+                }
+                return response.json();
+            })
             .then(json => ({ data: json }));
     }
     queryString(query: QueryType) {
