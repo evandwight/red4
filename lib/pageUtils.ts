@@ -12,6 +12,7 @@ export function serverSideErrorHandler<T extends {props: any}>(func: (context: N
             }
             return await func(context, req);
         } catch (err) {
+            console.error(err);
             let code = 500;
             let message = "Unknown error";
             if (err instanceof ApiError) {

@@ -7,7 +7,8 @@ import LoginCircle from 'svg/login-circle-line.svg';
 import LogoutCircle from 'svg/logout-circle-line.svg';
 import ProfileIcon from 'svg/user-settings-line.svg';
 
-export default function Layout({ children, extraButtons }: { children: any, extraButtons?: any }) {
+export default function Layout({ children, extraButtons, subTitle }
+    : { children: any, extraButtons?: any, subTitle?: string }) {
     const { data: session, status } = useSession()
 
     return <div className="bg-stone-500 custom-word-breaks overflow-x-hidden">
@@ -23,13 +24,14 @@ export default function Layout({ children, extraButtons }: { children: any, extr
                         Mm
                     </a>
                 </div>
+                {subTitle && <div className="text-stone-500 pl-1">- {subTitle}</div>}
                 <div className="ml-auto flex flex-row justify-around">
                     {extraButtons}
                     <div className="pl-2">
                         {status === "authenticated"
                             ? <NextIconLink2 href={PROFILE} title="profile">
                                 <ProfileIcon className="w-6 fill-green-500" />
-                                </NextIconLink2>
+                            </NextIconLink2>
                             : status === "loading"
                                 ? <button title="profile" disabled>
                                     <ProfileIcon className="w-6 fill-stone-500" />

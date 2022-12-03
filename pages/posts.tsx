@@ -2,73 +2,44 @@ import ChangeSortButton from "components/ChangeSort";
 import Layout from "components/Layout";
 import NextIconLink from "components/NextIconLink";
 import { Posts } from "components/Posts";
-import { API_GET_PROFILE, API_GET_VOTES, API_POSTS } from "lib/api/paths";
-import { InitialVotesType, PostType } from "lib/commonTypes";
+import { axiosGet } from "lib/api/axiosGet";
+import { API_POSTS } from "lib/api/paths";
+import { getUserIdOrNull } from "lib/api/utils";
+import { VotesType } from "lib/commonTypes";
+import { getOrCreateProfile } from "lib/getOrCreateProfile";
+import { ExtractSSProps, serverSideErrorHandler } from "lib/pageUtils";
 import { ABOUT, SEARCH_POST, SUBMIT_POST } from "lib/paths";
-import { useRestoreScrollPosition } from "lib/restoreScroll";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { getVotesInternal } from "pages/api/getVotes";
+import { defaultProfile } from "pages/api/profile";
 import AddSymbol from 'svg/add-line.svg';
 import QuestionSymbol from 'svg/question-line.svg';
 import SearchSymbol from 'svg/search.svg';
 
-const PostListing = () => {
-    const router = useRouter();
-    const { page: pageStr, sub, sort } = API_POSTS.querySchema.parse(router.query);
+export const getServerSideProps = serverSideErrorHandler(async (context, req) => {
+    const userId = await getUserIdOrNull(req);
+    let profile = defaultProfile;
+    let initialVotes: VotesType = {};
+    const { page: pageStr, sub, sort } = API_POSTS.querySchema.parse(context.query);
     const page = parseInt(pageStr || "1");
-    const [posts, setPosts] = useState<PostType[] | null>(null);
-    const [initialVotes, setInitialVotes] = useState<InitialVotesType>(null);
-    const [error, setError] = useState<string | null>(null);
-    const { data: session, status } = useSession();
-
-    useEffect(() => {
-        if (router.isReady) {
-            setPosts(null);
-            API_POSTS.get({ page: page.toString(), sub, sort }).then(result => {
-                setPosts(result.data.posts);
-            }).catch(err => setError(err?.response?.data || "error"));
-        }
-    }, [router.isReady, page, sub, sort]);
-
-
-    const [profile, setProfile] = useState<any>(null);
-    useEffect(() => {
-        API_GET_PROFILE.post()
-            .then(result => setProfile(result.data.profile))
-            .catch(err => setError(err?.response?.data || "error"));;
-    }, [])
-
-    useEffect(() => {
-        if (status === "unauthenticated") {
-            setInitialVotes({});
-            return;
-        }
-        else if (posts && status === "authenticated") {
-            const thing_ids = posts.map(post => post.id);
-            API_GET_VOTES.post(undefined, { thing_ids }).then((results) => setInitialVotes(results.data.votes));
-        }
-    }, [posts, status]);
-
-    const loading = !posts || !profile;
-    useRestoreScrollPosition(loading);
-
-    if (error) {
-        return <div>{error}</div>
-    } else if (loading) {
-        return <div>Loading</div>
-    } else {
-        const pageLinks = {
-            next: posts.length > 0 ? API_POSTS.queryString({ page: (page + 1).toString(), sub, sort }) : undefined,
-            prev: page > 1 ? API_POSTS.queryString({ page: (page - 1).toString(), sub, sort }) : undefined,
-        }
-        return <div>
-            <div className="flex flex-row-reverse text-stone-500">
-                {`${sort} ${sub} (${page})`}
-            </div>
-            <Posts {... { posts, initialVotes, profile, pageLinks, page }} />
-        </div>
+    const posts = (await axiosGet(API_POSTS, { page:pageStr, sub, sort })).data.posts;
+    if (userId) {
+        profile = await getOrCreateProfile(userId);
+        initialVotes = await getVotesInternal(userId, posts.map(e => e.id));
     }
+    return {
+        props: { profile, posts, initialVotes, page, sort, sub }
+    }
+});
+
+
+const PostListing = ({profile, posts, initialVotes, page, sort, sub}: ExtractSSProps<typeof getServerSideProps>) => {
+    const pageLinks = {
+        next: posts.length > 0 ? API_POSTS.queryString({ page: (page + 1).toString(), sub, sort }) : undefined,
+        prev: page > 1 ? API_POSTS.queryString({ page: (page - 1).toString(), sub, sort }) : undefined,
+    }
+    return <div>
+        <Posts {... { posts, initialVotes, profile, pageLinks, page }} />
+    </div>
 }
 
 function ExtraButtons() {
@@ -89,8 +60,9 @@ function ExtraButtons() {
 }
 
 PostListing.getLayout = function getLayout({ Component, pageProps }) {
+    const {sort, sub, page} = pageProps;
     return (
-        <Layout extraButtons={<ExtraButtons />}>
+        <Layout subTitle={`${sort} ${sub} (${page})`} extraButtons={<ExtraButtons />}>
             <Component {...pageProps} />
         </Layout>
     )

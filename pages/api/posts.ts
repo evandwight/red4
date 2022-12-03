@@ -5,9 +5,7 @@ import getTags from 'lib/getTags';
 import prisma, { prismaView } from 'lib/prisma';
 import { post_with_score } from 'prisma/generated/client-views';
 
-const handler = cachedApi(API_POSTS,{ttl: 600}, async (_, props) => {
-    const { page: pageStr, sub, sort } = props.query;
-    const page = parseInt(pageStr || "1");
+export async function getPostsWithTags({page, sub, sort}) {
     const perPage = 30;
     let query: any = { skip: (page - 1) * perPage, take: perPage };
     if (sub !== "all") {
@@ -24,8 +22,14 @@ const handler = cachedApi(API_POSTS,{ttl: 600}, async (_, props) => {
 
     const tagMap = await getTags(posts.map(post => post.id));
     const postsWithTags = posts.map(post => ({...post, tags: tagMap[post.id] || []}));
+    return postsWithTags;
+}
 
-    return { posts: postsWithTags };
+const handler = cachedApi(API_POSTS,{ttl: 600}, async (_, props) => {
+    const { page: pageStr, sub, sort } = props.query;
+    const page = parseInt(pageStr || "1");
+    const posts = await getPostsWithTags({page, sub, sort});
+    return { posts};
 
 });
 

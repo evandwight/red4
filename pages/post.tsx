@@ -1,69 +1,37 @@
 import { Comments } from "components/Comment/Comments";
 import { FullPost } from "components/Post";
-import { API_COMMENTS, API_GET_PROFILE, API_GET_VOTES, API_POST } from "lib/api/paths";
-import { CommentTreeNode } from "lib/commentTree";
-import { InitialVotesType, PostType, ProfileType } from "lib/commonTypes";
-import { useRestoreScrollPosition } from "lib/restoreScroll";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { axiosGet } from "lib/api/axiosGet";
+import { API_COMMENTS, API_POST } from "lib/api/paths";
+import { getUserIdOrNull } from "lib/api/utils";
+import { VotesType } from "lib/commonTypes";
+import { getOrCreateProfile } from "lib/getOrCreateProfile";
+import { ExtractSSProps, serverSideErrorHandler } from "lib/pageUtils";
+import { getVotesInternal } from "pages/api/getVotes";
+import { defaultProfile } from "pages/api/profile";
 
-export default function PostDetails() {
-    const router = useRouter();
-    const [post, setPost] = useState<PostType | null>(null);
-    const [comments, setComments] = useState<CommentTreeNode[] | null>(null);
-    const [initialVotes, setInitialVotes] = useState<InitialVotesType>(null);
-    const [error, setError] = useState<string | null>(null);
-    const { data: session, status } = useSession();
-
-    const [profile, setProfile] = useState<ProfileType | null>(null);
-    useEffect(() => {
-        API_GET_PROFILE.post().then(result => setProfile(result.data.profile)).catch(err => {
-            setError(err?.response?.data || "error");
-        });
-    }, [])
-
-    useEffect(() => {
-        if (router.isReady) {
-            const { id } = API_POST.querySchema.parse(router.query);
-            API_POST.get({ id }).then(result => {
-                setPost(result.data.post);
-            }).catch(err => {
-                setError(err?.response?.data || "error");
-            });
-            API_COMMENTS.get({ id }).then(result => {
-                setComments(result.data.commentTree);
-            }).catch(err => {
-                setError(err?.response?.data || "error");
-            });
-        }
-    }, [router]);
-
-    useEffect(() => {
-        if (status === "unauthenticated") {
-            setInitialVotes({});
-            return;
-        } else if (post && comments && status === "authenticated") {
-            const thing_ids = [post.id].concat(commentTreeToList(comments).map(node => node.id))
-            API_GET_VOTES.post(undefined, { thing_ids }).then((results) => setInitialVotes(results.data.votes));
-        }
-    }, [post, comments, status]);
-
-    useRestoreScrollPosition(!post || !profile || !comments);
-
-    if (error) {
-        return <div>{error}</div>
-    } else if (!post || !profile) {
-        return <div>Loading</div>
-    } else {
-        return <div>
-            <FullPost {... { post, initialVotes, profile }} />
-            <hr className="border-stone-500"></hr>
-            {comments ?
-                <Comments {... { post, nodes: comments, initialCollapse: {}, overrideCollapse: false, parentId: null, initialVotes, profile }} />
-                : <div> Loading </div>}
-        </div>
+export const getServerSideProps = serverSideErrorHandler(async (context, req) => {
+    const userId = await getUserIdOrNull(req);
+    let profile = defaultProfile;
+    let initialVotes: VotesType = {};
+    const { id } = API_POST.querySchema.parse(context.query);
+    const post = (await axiosGet(API_POST, { id })).data.post;
+    const comments = (await axiosGet(API_COMMENTS, { id })).data.commentTree;
+    if (userId) {
+        profile = await getOrCreateProfile(userId);
+        const thing_ids = [post.id].concat(commentTreeToList(comments).map(node => node.id));
+        initialVotes = await getVotesInternal(userId, thing_ids);
     }
+    return {
+        props: { profile, post, comments, initialVotes }
+    }
+});
+
+export default function PostDetails({ profile, post, comments, initialVotes }: ExtractSSProps<typeof getServerSideProps>) {
+    return <div>
+        <FullPost {... { post, initialVotes, profile }} />
+        <hr className="border-stone-500"></hr>
+        <Comments {... { post, nodes: comments, initialCollapse: {}, overrideCollapse: false, parentId: null, initialVotes, profile }} />
+    </div>
 }
 
 export function commentTreeToList(nodes) {

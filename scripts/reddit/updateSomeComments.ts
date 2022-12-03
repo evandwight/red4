@@ -1,7 +1,8 @@
+import { axiosGet } from "lib/api/axiosGet";
 import { API_POSTS } from "lib/api/paths";
 import prisma from "lib/prisma";
 import { updateComments } from "lib/pythonScript";
-import { axiosGet, hoursAgo, runOneTask } from "./util";
+import { hoursAgo, runOneTask } from "./util";
 
 async function main() {
     const hotPosts = await Promise.all([
