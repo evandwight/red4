@@ -60,7 +60,10 @@ export function PostButtons({ post, initialVotes, profile, isFull }) {
     const handleLoadRedditPost = () => {
         return API_LOAD_REDDIT_POST.post({ id: post.reddit_id })
             .then(response => { router.push(POST_DETAIL(response.data.id)) })
-            .catch(notAuthorizedToSignIn);
+            .catch(error => {
+                notAuthorizedToSignIn(error);
+                throw error;
+            });
     };
 
     return <div className="sm:flex sm:flex-row sm:justify-end">
@@ -71,7 +74,7 @@ export function PostButtons({ post, initialVotes, profile, isFull }) {
             {profile.has_tags &&
                 <div><NextIconLink href={SET_TAG(post.id)} imageObj={TagIcon} title="set tag" /></div>}
             {!isFull &&
-                <div><NextIconLink href={POST_DETAIL(post.id)} imageObj={DiscussLine} title="view comments" /></div>}
+                <div><a href={POST_DETAIL(post.id)} title="view comments"><DiscussLine className="w-6 fill-fuchsia-500"/></a></div>}
             {isFull &&
                 <div><NextIconLink href={SUBMIT_COMMENT(post.id, null)} imageObj={ReplyLine} title="submit comment" /> </div>}
             {isFull && !post.is_local &&
