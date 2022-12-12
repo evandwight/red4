@@ -20,7 +20,7 @@ export default function SubmitComment() {
         return <AccessDenied />
     }
 
-    if (status === "loading" && !router.isReady) {
+    if (status === "loading") {
         return <div>Loading...</div>
     }
 
