@@ -28,7 +28,7 @@ RETURNING id;
         comment.user_name)
     cur.execute(SQL, data)
     id = cur.fetchone()[0]
-    if (comment.removed_from_reddit):
-        upsertTag(context, 'removed_from_reddit', id, True, commit=False)
+    if (comment.reddit_removed):
+        upsertTag(context, 'reddit_removed', id, True, commit=False)
     conn.commit()
     return id

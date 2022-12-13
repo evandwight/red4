@@ -34,8 +34,8 @@ def updateComments(context, redditSubmission, postId):
     for comment in comments:
         comment.local_id = str(uuid.uuid4())
         comment.user_name = (comment.author and comment.author.name) or "reddit-anon"
-        comment.removed_from_reddit = isCommentRemoved(comment)
-        if comment.removed_from_reddit:
+        comment.reddit_removed = isCommentRemoved(comment)
+        if comment.reddit_removed:
                 removedComments.append(comment.id)
 
     for comment in comments:
@@ -51,7 +51,7 @@ def updateComments(context, redditSubmission, postId):
     #             comment = commentMap[psComment.id]
     #             comment.body = psComment.body
     #             comment.user_name = psComment.author
-    #             comment.removed_from_reddit = True
+    #             comment.reddit_removed = True
 
     for comment in comments:
         upsertComment(context, comment, postId)
