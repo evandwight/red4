@@ -42,7 +42,7 @@ export function Comment({ node, profile, post, initialVotes, collapseChildren }:
     const { comment } = node;
     const [expand, setExpand] = useState(true);
     const toggleExpand = useCallback(() => {
-        if (!window.getSelection()?.toString()) {
+        if (window.getSelection()?.toString()) {
             return;
         }
         setExpand(!expand)
