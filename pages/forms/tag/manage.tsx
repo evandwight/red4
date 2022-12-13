@@ -20,7 +20,7 @@ export default function ManageTag({ initialTags }: ExtractSSProps<typeof getServ
     const [errors, setErrors] = useState<string[]>([]);
     const [tags, setTags] = useState(initialTags);
 
-    const handleSubmit = createHandleSubmit(["name"], API_FORM_TAG_CREATE,
+    const handleSubmit = createHandleSubmit(["tag_id"], API_FORM_TAG_CREATE,
         (res) => setErrors(res.errors), (res) => setTags(res.tags));
     return <div>
         <ErrorList errors={errors} />
