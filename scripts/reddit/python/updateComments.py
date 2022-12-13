@@ -41,17 +41,17 @@ def updateComments(context, redditSubmission, postId):
     for comment in comments:
         comment.local_parent_id = commentMap[comment.parent_id[3:]].local_id if comment.parent_id.startswith("t1_") else None          
 
-    if len(removedComments) > 0:
-        if len(removedComments) > 100:
-            print('Too many removed comments to load from pushshift')
-            removedComments = removedComments[:100]    
-        pushshiftRemovedComments = list(pushshift.search_comments(ids=removedComments, limit=100, metadata=True))
-        for psComment in pushshiftRemovedComments:
-            if psComment.id in commentMap:
-                comment = commentMap[psComment.id]
-                comment.body = psComment.body
-                comment.user_name = psComment.author
-                comment.removed_from_reddit = True
+    # if len(removedComments) > 0:
+    #     if len(removedComments) > 100:
+    #         print('Too many removed comments to load from pushshift')
+    #         removedComments = removedComments[:100]    
+    #     pushshiftRemovedComments = list(pushshift.search_comments(ids=removedComments, limit=100, metadata=True))
+    #     for psComment in pushshiftRemovedComments:
+    #         if psComment.id in commentMap:
+    #             comment = commentMap[psComment.id]
+    #             comment.body = psComment.body
+    #             comment.user_name = psComment.author
+    #             comment.removed_from_reddit = True
 
     for comment in comments:
         upsertComment(context, comment, postId)

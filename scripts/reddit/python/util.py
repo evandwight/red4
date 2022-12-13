@@ -20,7 +20,7 @@ def getTools():
         user_agent="linux:NA:1 (by u/evandwight)",
     )
 
-    pushshift = PushshiftAPI()
+    pushshift = None# PushshiftAPI()
     return (conn, cur, reddit, pushshift)
 
 def skipIfBusy():
