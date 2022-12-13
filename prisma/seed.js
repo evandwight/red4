@@ -12,6 +12,7 @@ async function main() {
     await prisma.define_tag.create({ data: { tag_id: "reddit_locked", user_id: adminId } });
     await prisma.define_tag.create({ data: { tag_id: "mean", user_id: adminId } });
     await prisma.define_tag.create({ data: { tag_id: "rage_bait", user_id: adminId } });
+    await prisma.define_tag.create({ data: { tag_id: "reddit_deleted", user_id: adminId } });
 }
 
 main().then(async () => {
