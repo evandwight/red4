@@ -41,7 +41,12 @@ type ReactCommentType = {
 export function Comment({ node, profile, post, initialVotes, collapseChildren }: ReactCommentType) {
     const { comment } = node;
     const [expand, setExpand] = useState(true);
-    const toggleExpand = useCallback(() => setExpand(!expand), [expand, setExpand]);
+    const toggleExpand = useCallback(() => {
+        if (!window.getSelection()?.toString()) {
+            return;
+        }
+        setExpand(!expand)
+    }, [expand, setExpand]);
     const { show, reason } = filterByProfile(comment, profile);
     return <div id={`comment-${node.id}`}>
         <CommentDepth depth={node.depth}>
