@@ -3,9 +3,9 @@ import { API_GET_PROFILE } from 'lib/api/paths';
 
 export const defaultProfile: any = {
     tag_filter: {
-        reddit_deleted: false,
-        reddit_removed: false,
-        reddit_locked: false,
+        reddit_deleted: true,
+        reddit_removed: true,
+        reddit_locked: true,
     }
 };
 
